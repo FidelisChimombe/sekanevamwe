@@ -4,23 +4,60 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
+var mongoose = require('mongoose');
+var session = require('express-session');
+var mongoStore = require('connect-mongo')(session);
+var flash = require('connect-flash');
+var passport = require('passport');
+var methodOverride = require('method-override');
 
-var routes = require('./routes/index');
-var users = require('./routes/users');
 
 var app = express();
 
+
+//database setupstat
+mongoose.connect('mongodb://localhost/sekanevamwe');
+var db = mongoose.connection; //this creates a db instance
+
+db.on('error',function(){
+    console.log("Failed to connect to Sekanevamwe database ...");
+});
+
+
+db.once('open',function(){
+    console.log("Successfully connected to Sekanevamwe database ...");
+});
+
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'jade');
+app.set('view engine', 'ejs');
 
 // uncomment after placing your favicon in /public
 //app.use(favicon(__dirname + '/public/favicon.ico'));
 app.use(logger('dev'));
+app.use(cookieParser());
+app.use(session({
+            secret:'very secretive', 
+            store : new mongoStore({
+                 mongooseConnection: db//supposed to connect to the instance of the db// put all connections you want to go to the db
+            
+
+            }),
+             saveUninitialized : true,
+             resave : true
+         }));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
-app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(flash());
+app.use(passport.initialize());
+app.use(passport.session());
+app.use(methodOverride('_method'));
+
+
+//Routing
+var routes = require('./routes/index');
+var users = require('./routes/users');
 
 app.use('/', routes);
 app.use('/users', users);
