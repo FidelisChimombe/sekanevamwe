@@ -14,7 +14,6 @@ var methodOverride = require('method-override');
 
 var app = express();
 
-
 //database setupstat
 mongoose.connect('mongodb://localhost/sekanevamwe');
 var db = mongoose.connection; //this creates a db instance
@@ -59,6 +58,8 @@ app.use(methodOverride('_method'));
 var routes = require('./routes/index');
 var users = require('./routes/users');
 
+
+//Direct certain urls to the correct place
 app.use('/', routes);
 app.use('/users', users);
 

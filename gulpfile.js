@@ -38,4 +38,4 @@ gulp.task('serve', function() {
   });
 });
 
-gulp.task('default', ['serve']);
+gulp.task('develop', ['serve']);  //call gulp develop and it will run serve which is constantly watching the files in gulp.task('serve')
