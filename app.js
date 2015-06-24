@@ -57,11 +57,15 @@ app.use(methodOverride('_method'));
 //Routing
 var routes = require('./routes/index');
 var users = require('./routes/users');
+var jokes = require('./routes/jokes');
+var comments = require('./routes/comments');
 
 
 //Direct certain urls to the correct place
 app.use('/', routes);
 app.use('/users', users);
+app.use('/jokes', jokes);
+app.use('/comments', comments);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

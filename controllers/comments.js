@@ -47,7 +47,7 @@ comment_controller.delete_comment = function(req,res){
       }
     });
   }else{
-    res.json({message:"You can't delete the comment because you are not the author ");
+    res.json({message:"You can't delete the comment because you are not the author "});
   }
 }
 
@@ -84,13 +84,13 @@ comment_controller.update_comment = function(req,res){
     if(comment){
       if(comment.author === req.user.id){
         comment.content = content;
-        comment.save(err,comment){
+        comment.save(function(err,comment){
           if(!err){
             res.json({message:"Comment successfully updated", comment:comment});
           }else{
             res.json({message:"Comment updating failed"});
           }
-        }
+        });
       }else{
         res.json({message: "you can't edit because you are not the owner of the comment"});
       }
