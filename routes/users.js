@@ -39,31 +39,22 @@ router.post('/register',function(req,res){
 
 
 //logs in a user into the system
-router.post('/login',passport.authenticate('local',{session:true, failureRedirect: '/users/login', successFlash: 'Welcome!'}),function(req,res){
+router.post('/login',passport.authenticate('local',{session:true, successFlash: 'Welcome!'}),function(req,res){
   //redirect the user with to the right page, since this is a one page application, will return json data to the client
   //wanna send something back to the server
-  res.json({message:"zvaita"});
+  res.render('jokes/regular',{message:"zvaita", user:req.user,title:"Regular"});
  
 });
 
-router.get('/login',function(req,res){ 
- res.render('login', { title: 'Express' });
+router.get('/login',function(req,res){
+  res.render('users/login',{data:null,title:"Login"});
 });
+
+
   
-
-  //response.success(res,"The login was successful", req.user, 200); //req.user will give the client the user object to the client
-
-
-//logs out a user out of the system
-// router.post('/login',
-//   passport.authenticate('local', { successRedirect: '/',
-//                                    failureRedirect: '/login',
-//                                    failureFlash: true })
-// );
-
 router.get('/logout',function(req,res){ 
   req.logout();
-  res.redirect();
+  res.redirect('/users/login');
 });
 
 //validates the email address of the account owner
@@ -76,10 +67,4 @@ router.get('/', function(req, res) {
   res.send('respond with a resource');
 });
 
-
- 
-
-// router.get('/:username',function(req,res){
-//   user_controller.profile(req,res);
-// });
 module.exports = router;

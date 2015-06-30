@@ -2,8 +2,6 @@
 * Handles authentication
 *Takes care of Registration, Login and Logout
 */
-
-
 var express = require('express');
 var mongoose = require('mongoose');
 var async = require('async');
@@ -29,13 +27,12 @@ user_controller.register = function(req,res){
     return;
   }*/
 
-  //attempt to register the user
-
-  console.log(req.query.username);
+  //attempt to register the user 
   
   var link = 'http://'+ req.headers.host +'/users/validate?uniqueIdentifier=' // link to confirm account
   async.waterfall(
     [ //Validate the user input
+    //remember to correct the req.query
       function(callback){
         var errors = custom_validator.validate(req.query);
         if (errors.length != 0){
@@ -142,9 +139,10 @@ user_controller.email_user = function(useremail,content, subject,res){
 
   transporter.sendMail(emailoptions,function(error,info){
     if(error){
-      res.json({error:"failed to send email", message:"message sending failed"});
+      res.render('error',{error:"failed to send email", message:"message sending failed"});
     }else{   
-      response.success(res, "Confirmation email was sent successful", null, 200);  
+      res.render('users/email_confirmation',{title:"Email Confirmation"});
+      // response.success(res, "Confirmation email was sent successful", null, 200);  
            
     }
   });
@@ -168,45 +166,58 @@ user_controller.validate_email = function(req,res){
       user.account_confirmed = true;
       user.save(function(err,user){
         if(!err){
-          console.log("The accounting has been confirmed");
-          response.success(res, "Your account has been successfully confirmed, batai mbabvu tiseke", null, 200);
+          // console.log("The accounting has been confirmed");
+          // response.success(res, "Your account has been successfully confirmed, batai mbabvu tiseke", null, 200);
+          var regular_jokes =Joke.jokes("regular");
+          if(regular_jokes.jokes!=undefined){
+              res.render('jokes/regular',{title: "Regular Jokes", jokes:regular_jokes.jokes}); //the defaulut jokes to be returned are the regular jokes because they harm nobody
+          }else{
+              res.render('error');
+          }
         }else{
-          response.failure(res, "couldn't confirm the account", null, 401);
+          // response.failure(res, "couldn't confirm the account", null, 401);
+          res.render('error',{error:"Couldn't confirm your account"});
         }
       });
     }else{
-      response.failure(res, "couldn't confirm the account", null, 401);
+      res.render('error',{error:"Couldn't confirm your account"});
     }
   });
 
 
 }
 
+/*Features
 
-//query --- things with question marks
-//params --- :/something://something
-//body   --- json or form
+laughing groups
+Following
+Facebook and Twitter share features [Conclude by saying sekanevamwe]
+Hash Tags
+Joke Categorization [Chinotimba Jokes]
+Jokes with images
+Meme Jokes
+Statistics features for the sake of data, prolly integrate google analytics
+Messaging
+Enable Video Sharing
+Implement Features which go along with social trends in Zimbabwe
 
-// user_controller.profile = function(req,res){
-//   console.log("*************************************************");
-//   console.log(req._passport.session.user);
-  
-//   User.findOne({username:req.params.username},function(err,user){
-  
-//     if(err){
-//       res.send("An error occured");
-//     }else if(!user){    
-//       response.failure(res, "Sorry the username couldn't be found", null, 401);    
-//     }else{
-//       response.success(res, "congrats your profile is being retrieved", user, 200);        
-//     }
-//   });
-// }
-
-/*
-add foillowing feature
-on the person's profile they should see jokes of the people they are following
-form laughing groups
 */
+
+//user's profile
+user_controller.profile = function(req,res){ 
+var user_id = req.params.id;// adding an extra layer for checking that the person re
+  User.findOne({_id:req.user.id},function(err,user){  
+    if(!err){
+      res.render("users/my_profile",{title: "Profile",user:req.user}); //with time , add more information about the user e.g friends, jokes, comments, sando
+    }else{
+      res.render('error');
+    }
+  });
+}
+
+//edit profile
+//update profile
+
+
 
 module.exports = user_controller;

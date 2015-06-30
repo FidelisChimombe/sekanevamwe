@@ -1,0 +1,24 @@
+<% layout('layouts/main-layout') -%>
+        <form action="/jokes/new_joke" method="post">
+             <div>
+                
+                <label>Title:</label>
+                <input type="text" name="title"/>
+            </div>
+            <div>
+                <label>Joke:</label>
+                <input type="text" name="content"/>
+            </div>
+             <div>   
+               
+                <input type="hidden" name="id" value='<%=id%>' />
+            </div>
+           
+            <div>
+               <label>Level:</label>
+                <input type="text" name="level"/>
+            </div>
+            <div>
+                <input type="submit" value="New Joke"/>
+            </div>
+        </form>

@@ -38,6 +38,8 @@ userSchema.methods.validatePassword = function (password, callback) {
   });
 }
 
+//implement getUser method, which will give you the logged in user at any time.
+
 
 
 user = mongoose.model('User',userSchema);

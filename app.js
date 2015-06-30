@@ -10,9 +10,11 @@ var mongoStore = require('connect-mongo')(session);
 var flash = require('connect-flash');
 var passport = require('passport');
 var methodOverride = require('method-override');
+var engine = require('ejs-mate');
 
 
 var app = express();
+
 
 //database setupstat
 mongoose.connect('mongodb://localhost/sekanevamwe');
@@ -28,6 +30,7 @@ db.once('open',function(){
 });
 
 // view engine setup
+app.engine('ejs',engine);
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 

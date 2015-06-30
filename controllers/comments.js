@@ -21,7 +21,7 @@ comment_controller.new_comment=function(req,res){
     created_at: created_at,
     });
 
-  if(req.user.id === author_id){
+  if(JSON.stringify(req.user.id) ===JSON.stringify(author_id)){
     new_comment.save(function(err,comment){
       if(err){
         res.json({error: "An error occured, while trying to make your comment"});
@@ -36,9 +36,9 @@ comment_controller.new_comment=function(req,res){
 
 //can't comment on jokes now, but later
 comment_controller.delete_comment = function(req,res){
-  var comment_id = req.params.comment_id;
-  var author_id = req.params.author_id;
-  if(req.user.id === author_id){
+  var comment_id = req.body.comment_id;
+  var author_id = req.body.author_id;
+  if(JSON.stringify(req.user.id) ===JSON.stringify(author_id)){
     Comment.findByIdAndRemove({id:comment_id},function(err){
       if(!err){
         res.json({message:"Comment successfully deleted"})
@@ -55,12 +55,10 @@ comment_controller.delete_comment = function(req,res){
 //can't comment on jokes now
 
 comment_controller.edit_comment = function(req,res){
-
   var comment_id = req.params.comment_id;
-
   Comment.findOne(comment_id,function(err,comment){
     if(comment){
-      if(comment.author === req.user.id){
+      if(JSON.stringify(req.user.id) ===JSON.stringify(author_id)){
         //will just return to you the original post before editing
         res.json({comment:comment});
       }else{
@@ -82,7 +80,7 @@ comment_controller.update_comment = function(req,res){
   var content = req.params.content;
   Comment.findOne(joke_id,function(err,comment){
     if(comment){
-      if(comment.author === req.user.id){
+      if(JSON.stringify(req.user.id) ===JSON.stringify(author_id)){
         comment.content = content;
         comment.save(function(err,comment){
           if(!err){

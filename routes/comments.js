@@ -11,7 +11,7 @@ router.post('/new_comment',function(req,res){
   comment_controller.new_comment(req,res);
 });
 
-router.delete('/delete_comment/:id',function(req,res){
+router.post('/delete_comment',function(req,res){
   comment_controller.delete_comment(req,res);
 });
 
@@ -19,7 +19,7 @@ router.get('/edit/:id',function(req,res){
   comment_controller.edit_comment(req,res);
 });
 
-router.put('/update/:id',function(req,res){
+router.post('/update',function(req,res){
   comment_controller.update_comment(req,res);
 });
 

@@ -31,7 +31,7 @@ gulp.src('./templates/*.ejs')
 
 gulp.task('serve', function() {
   supervisor('./bin/www', {
-    watch: ['./models', './utils','./app.js','./routes','./controllers'], // looks for changes in these files and automatically restarts the server
+    watch: ['./models', './utils','./app.js','./routes','./controllers','./views'], // looks for changes in these files and automatically restarts the server
     exec: 'node',
     extensions: ['js'],
     noRestartOn: 'exit'

@@ -8,7 +8,7 @@ var joke_controller= {};
 
 
 joke_controller.new_joke=function(req,res){
-  var author_id = req.user.id;
+  var author_id = req.body.id;//put req.user though
   var content = req.body.content;
   var level = req.body.level;
   var created_at = Date.now();
@@ -27,22 +27,27 @@ joke_controller.new_joke=function(req,res){
   if(req.user.id === author_id){
     new_joke.save(function(err,joke){
       if(err){
-        res.json({error: "An error occured, while trying to make your joke"});
+        res.render('error',{error: "An error occured, while trying to make your joke"});
       }else{
-        res.json({message:"joke successfully created", joke : joke})
+        if(level==="regular"){
+          res.render('jokes/regular',{message:"joke successfully created", joke : joke,title:"Regular Jokes"});
+        }else{
+          res.render('jokes/eighteen',{message:"joke successfully created", joke : joke,title:"Eighteen Jokes"});
+        }
       }
     });
   }else{
-    res.json({error:"Can't post the joke because you are not logged in"})
+    res.render('error',{error:"Can't post the joke because you are not logged in"})
   }
 }
 
 
 joke_controller.delete_joke = function(req,res){
-  var joke_id = req.params.id;
-  var author_id = req.params.author_id;
+  var joke_id = req.body.id;
+  var author_id = req.body.author_id;
+  console.log(req.user.id === author_id);
   if(req.user.id === author_id){
-    Joke.findByIdAndRemove({id:joke_id},function(err){
+    Joke.findByIdAndRemove({_id:joke_id},function(err){
       if(!err){
         res.json({message:"Joke successfully deleted"})
       }else{
@@ -54,20 +59,38 @@ joke_controller.delete_joke = function(req,res){
   }
 }
 
+joke_controller.show_joke = function(req,res){
+  var joke_id = req.params.joke_id;
+  Joke.findOne(joke_id,function(err,joke){
+    if(joke){
+        var comments=Joke.comments(joke_id);
+        if(comments.comments != undefined){      
+          res.render('jokes/show',{message:"Joke editing was successful",joke:joke,comments:comments.comments,title:"Joke"});
+        }else{
+          res.render('error',{error: "Can't show the jokes comments"});
+        }     
+    }else{
+      res.render('error',{error: "Joke showing failed"});
+    }
+
+  });
+}
+
 //You can only edit what you posted
 
 joke_controller.edit_joke = function(req,res){
   var joke_id = req.params.joke_id;
+  console.log(req.user.id);
   Joke.findOne(joke_id,function(err,joke){
-    if(joke){
-      if(joke.author === req.user.id){
+    if(joke){  
+      if(JSON.stringify(joke.author)===JSON.stringify(req.user.id)){ // serialization makes it easy to compare objects
         //will just return to you the original post before editing
-        res.json({message:"Joke editing was successful",joke:joke});
+        res.render('jokes/edit',{message:"Joke editing was successful",joke:joke,title:"Edit Joke"});
       }else{
-        res.json({error: "you can't edit because you are not the owner of the post"});
+        res.render('error',{error: "you can't edit because you are not the owner of the post"});
       }
     }else{
-      res.json({erro: "Joke editing failed"});
+      res.render('error',{error: "Joke editing failed"});
     }
 
   });
@@ -77,25 +100,26 @@ joke_controller.edit_joke = function(req,res){
 //You can only edit what you posted
 
 joke_controller.update_joke = function(req,res){
-  var joke_id = req.params.joke_id;
-  var content = req.params.content;
+  var joke_id = req.body.joke_id;
+  var content = req.body.content;
+  console.log(content);
   Joke.findOne(joke_id,function(err,joke){
       if(joke){
-        if(joke.author === req.user.id){
+        if(JSON.stringify(joke.author)===JSON.stringify(req.user.id)){
           joke.content = content;
           joke.save(function(err,joke){
-                if(!err){
-                  res.json({message:"Joke successfully updated", joke:joke});
-                }else{
-                  res.json({error:"Joke updating failed"});
-                }
-          
+                 var comments=Joke.comments(joke_id);
+                 if(comments.comments != undefined){      
+                   res.render('jokes/show',{message:"Joke updating was successful",joke:joke,comments:comments.comments,title:"Joke"});
+                 }else{
+                   res.render('error',{error: "Can't show the jokes comments"});
+                 }          
           });
         }else{
-            res.json({error: "you can't edit because you are not the owner of the post"});
+            res.render('error',{error: "you can't edit because you are not the owner of the post"});
         }
       }else{
-        res.json({error: "Joke editing failed"});
+        res.render({error: "Joke updating failed"});
       }
     }); 
  }
@@ -105,10 +129,10 @@ joke_controller.update_joke = function(req,res){
 //flag_a_joke, transfers a joke from regular to 18+
 
 joke_controller.flag_joke = function(req,res){
-  var joke_id = req.params.id;
+  var joke_id = req.body.id;
   Joke.findOne(joke_id,function(err,joke){
       if(!err){
-        joke.flags++;
+        joke.flags++; //when flag is above 5, change the joke from regular to 18+
         joke.save(function(err,joke){
           if(joke){
             res.json({message:"Joke successfully flagged",joke:joke});//destroy the html element containg the flagged joke
@@ -117,7 +141,7 @@ joke_controller.flag_joke = function(req,res){
           }
         });
       }else{
-        res.json({error:"Error occured"});
+        res.render('error',{error:"Error occured"});
      }
   });
 }
@@ -125,6 +149,7 @@ joke_controller.flag_joke = function(req,res){
 
 joke_controller.all_comments=function(req,res){
   var joke_id = req.params.joke_id;
+  console.log(req);
   Comment.find({joke_id:joke_id},function(err,comments){
     if(!err){
       res.json({message:"These are all the comments",comments:comments});
@@ -132,13 +157,14 @@ joke_controller.all_comments=function(req,res){
       res.json({error:"Can't return all the comments belonging to the joke"});
     }
   });
-  //use mongoose to populate
 }
 
-//anybody can like a joke
+/*Anybody can like a joke, I am still trying to figure out a way of making unique likes
+
+*/
 
 joke_controller.like=function(req,res){
-  var joke_id= req.params.joke_id;
+  var joke_id= req.body.joke_id;
   Joke.findOne(joke_id,function(err,joke){
     if(joke){
       if(joke.likes.indexOf(joke_id)===-1){ //check for the person liking no the joke id
@@ -165,11 +191,36 @@ joke_controller.like=function(req,res){
 joke_controller.all_jokes = function(req,res){
   Joke.find({},function(err,jokes){
     if(!err){
-      res.json({message:"All Jokes",jokes:jokes});
+      res.render('jokes/all_jokes',{message:"All Jokes",jokes:jokes,level:"all_jokes",title:"All Jokes"});
     }else{
-      res.json({error:"Can't retrieve jokes"});
+      res.render('error',{error:"Can't retrieve jokes"});
     }
   });
 }
+
+joke_controller.regular = function(req,res){
+  Joke.find({level:"regular"},function(err,jokes){
+    if(!err){
+      res.render('jokes/regular',{message:"All Jokes",jokes:jokes,level:"regular",title:"Regular Jokes"});
+    }else{
+       res.render('error',{error:"Can't retrieve jokes"});
+    }
+    
+  });
+}
+
+joke_controller.eighteen = function(req,res){
+  Joke.find({level:"regular"},function(err,jokes){
+    if(!err){
+      res.render('jokes/eighteen',{message:"All Jokes",jokes:jokes, level:"eighteen",title:"18+ Jokes"});
+    }else{
+       res.render('error',{error:"Can't retrieve jokes"});
+    }
+    
+  });
+}
+
+
+
 module.exports = joke_controller;
 
