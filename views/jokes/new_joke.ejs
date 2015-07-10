@@ -1,24 +1,45 @@
 <% layout('layouts/main-layout') -%>
-        <form action="/jokes/new_joke" method="post">
-             <div>
-                
-                <label>Title:</label>
-                <input type="text" name="title"/>
-            </div>
-            <div>
-                <label>Joke:</label>
-                <input type="text" name="content"/>
-            </div>
-             <div>   
-               
-                <input type="hidden" name="id" value='<%=id%>' />
-            </div>
-           
-            <div>
-               <label>Level:</label>
-                <input type="text" name="level"/>
-            </div>
-            <div>
-                <input type="submit" value="New Joke"/>
-            </div>
+      
+        
+        <form action="/jokes/new_joke" method="post" id="new_joke_form">
+             <table >
+                <tr class="t-form-rows">
+                    <td class="first-column-input"><label>Joke Title</label> </td>
+                    <td> <input class="input-fields" type="text" name="title" maxlength="80"/></td>
+                </tr>
+
+                 <tr class="t-form-rows">
+                    <td class="first-column-input"><label>Joke</label> </td>
+                    <td> <textarea name="content" form="new_joke_form" placeholder="Isa Joke Pano"></textarea></td>
+                </tr>
+
+                 <tr class="t-form-rows">
+                    <td>  <input type="hidden" name="id" value='<%=user.id%>'/></td>
+                </tr>
+
+                 <tr class="t-form-rows">
+                    <td class="first-column-input"><label>Level</label> </td>
+                    <td><select name="level">
+                          <option value="regular">Regular</option> 
+                          <option value="eighteen">18+ </option>                         
+                        </select> 
+                    </td>
+                </tr>
+
+                 <tr class="t-form-rows">                  
+                    <td class= class="first-column-input"> <input class="submit-buttons" type="submit" value="Post"/></td>
+                </tr>
+             </table>
         </form>
+
+
+
+
+
+
+
+       
+
+
+            
+

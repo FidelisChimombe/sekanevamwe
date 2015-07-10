@@ -16,7 +16,7 @@ require('./../utils/auth.js');
 
 router.post('/new_joke',function(req,res){
 
-  console.log(req.headers.cookie);
+
   joke_controller.new_joke(req,res);
 });
 
@@ -28,7 +28,12 @@ router.get('/edit/:id',function(req,res){
   joke_controller.edit_joke(req,res);
 });
 
-router.post('/update',function(req,res){
+router.get('/show/:joke_id',function(req,res){
+  joke_controller.show_joke(req,res);
+});
+
+
+router.post('/update/:id',function(req,res){
   joke_controller.update_joke(req,res);
 });
 
@@ -48,16 +53,14 @@ router.get('/all_jokes',function(req,res){
   joke_controller.all_jokes(req,res);
 });
 
-router.get('/regular',function(req,res){
-  joke_controller.regular(req,res);
-});
+
 
 router.get('/regular',function(req,res){
   joke_controller.regular(req,res);
 });
 
 router.get('/new_joke',function(req,res){
-  res.render('jokes/new_joke',{title:"New Joke",message:"Fidelis",id:req.user.id});
+    res.render('jokes/new_joke',{title:"New Joke",message:"Fidelis",user:req.user});
 });
 
 router.get('/eighteen',function(req,res){

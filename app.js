@@ -11,9 +11,24 @@ var flash = require('connect-flash');
 var passport = require('passport');
 var methodOverride = require('method-override');
 var engine = require('ejs-mate');
+var moment = require('moment');
+var timeago = require('timeago');
 
 
 var app = express();
+
+var helpers = require('express-helpers')(app); //automatically includes all view-helpers
+
+
+
+console.log(timeago(new Date()));
+
+
+
+
+
+
+
 
 
 //database setupstat
@@ -55,6 +70,7 @@ app.use(flash());
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(methodOverride('_method'));
+moment().format();
 
 
 //Routing

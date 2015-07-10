@@ -1,0 +1,41 @@
+
+<% layout('layouts/main-layout') -%>
+<div class="display">
+<table>
+
+  <tr class="joke-row">
+    <% if(user){%>
+      <td class="inlineb">
+        <div> <button type="button" class="like"></button></div>
+        <div> <button type="button" class="dislike"></button></div>
+      </td>
+    <%}%>
+    <td class="inlineb">
+      <div><img src="/images/profile_pic.png" class="profile_picture"></div>
+    </td>
+    <td class="joke-title-row inlineb">
+      <div class="joke-title"><b><%=joke.title%></b></div>
+      <div>        
+        <div class="inner-joke" ><%=joke.comments.length + " comments"%></div>
+        <div class="inner-joke"><%=" "+ joke.likes.length + " likes "%></div>
+        <div class="inner-joke"><time class="timeago" datetime='<%=joke.created_at.toISOString()%>'><%=joke.created_at.toISOString()%></time></div>
+      </div>      
+    </td>
+
+  </tr>
+  <tr>
+    <td><%= joke.content %></td>
+  </tr>
+
+  <% if(user){%>
+    <form action = "/comments/new_comment" method = "post">
+      <tr>  
+        <td><input class="input-fields" type="text"  /></td>
+        <td><input type="hidden" name="joke_id" value='<%=joke.id%>'/></td>
+        <td><input type="hidden" name="author_id" value='<%=user.id%>'/></td>
+        <td><input class="" type="submit" value="comment"/></td>    
+      </tr>
+    </form>
+  <%}%>
+</table>
+</div>

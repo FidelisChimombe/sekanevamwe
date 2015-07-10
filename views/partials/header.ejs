@@ -1,50 +1,41 @@
-    
-    <div id="main-first-header">
-        <div class="logo-header" id="left-logo">
-        <img src="/images/sekanevamwe.jpg">
-        
-        </div>
-        
-        <div  class="logo-header" id="right-logo">
+
+    <div id="main-first-header" class="inlineb">
+        <div class="logo-header inlineb" id="left-logo">
+          <img src="/images/sekanevamwe.jpg" id="logo">
+
+        </div>     
+
+        <div  class="logo-header inlineb" id="right-logo">
             <ul id="nav">
-              <li  class="nav"><a href="default.asp">Home</a></li>             
-              <li  class="nav"><a href="about.asp">Fidelis</a></li>
-              <li  class="nav"><a  href="about.asp">login</a></li>
-              <li> 
-                <form action = "/users/login" method = "get">
-                <input class="login-button" type="submit" value="Login" id="login-user"/>
-                </form>
-              </li>
+              <li  class="nav inlineb"><b><a href="/jokes/regular">Sekanevamwe</a></b></li>              
+              <% if(user){%>
+                <li class="nav inlineb"><b><%= user.username%></b></li>
+                <li class="nav inlineb">
+                  <b>
+                    <form action = "/users/logout" method = "get">
+                      <input class="login-logout" type="submit" value="logout" />
+                    </form>
+                  </b>
+                </li>
+              <%}else{%>
+                <li class="nav inlineb">
+                  <b>
+                    <form action = "/users/login" method = "get">
+                      <input class="login-logout" type="submit" value="login" />
+                    </form>
+                  </b>
+                </li>
+               <%}%>                         
             </ul>
         </div>
-
     </div>
-
-    <div id="main-second-header">
-        <div class="second-header">
-          <form action = "/jokes/regular" method = "get">
-              <input class="second-header-button" type="submit" value="Regular" id="regular-jokes"/>
-          </form>
+    <div id="joke-regulator" class="">
+          <ul class="horizontal-navigation">
+            <li class="navigator"><a href="/jokes/regular">Regular</a></li>
+            <li class="navigator"><a href="/jokes/eighteen">18+</a></li>
+            <li class="navigator"><a href="/jokes/all_jokes">All Jokes</a></li>
+            <%if(user){%>
+              <li class="navigator"><a href="/jokes/new_joke">New Joke</a></li>
+            <%}%>    
+          </ul>
         </div>
-
-         <div class="second-header">
-          <form action = "/jokes/eighteen" method = "get">
-              <input  class="second-header-button" type="submit" value="18+" id="eighteen-jokes"/>
-          </form>
-        </div>
-
-         <div class="second-header">
-          <form action = "/jokes/all_jokes" method = "get">
-              <input  class="second-header-button" type="submit" value="All Jokes" id="all-jokes"/>
-          </form>
-        </div>
-
-         <div class="second-header">
-          <form action = "/jokes/new_joke" method = "get">
-              <input  class="second-header-button" type="submit" value="New Joke" id="new-joke"/>
-          </form>
-        </div>
-
-
-        
-    </div>

@@ -34,24 +34,31 @@ user_controller.register = function(req,res){
     [ //Validate the user input
     //remember to correct the req.query
       function(callback){
-        var errors = custom_validator.validate(req.query);
+        console.log(req.body);
+        var errors = custom_validator.validate(req.body);
         if (errors.length != 0){
+          
           callback(errors);
         } else {
+          
           callback(null);
         }
       },
       //Find if the use exists
       function(callback){
-
+        
         User.findOne({"username": req.body.username}, function(err, user){
-          if (err)
+          if (err){
+            
             callback(err);
+          }
           else if (user){
+            
             callback("Username already exists");
           } else{
             //the user has not been found, and signalling that no error has
-            //happened
+            //happened3333333333333
+           
             callback(null);
           }
         });
@@ -66,19 +73,19 @@ user_controller.register = function(req,res){
       //Hash the password and salt
       function(salt, callback){
         //callback is called with (err, encypted)
-        bcrypt.hash(req.query.password, salt, callback);
+        bcrypt.hash(req.body.password, salt, callback);
         
       },
       //Save the use in the database
       function(password_hash, callback){
         
-         console.log(password_hash);
+         
         var new_user = {
 
-          "email": req.query.email,
+          "email": req.body.email,
           "password_hash": password_hash,          
-          "mutupo" : req.query.mutupo,         
-          "username":req.query.username.toLowerCase(),
+          // "mutupo" : req.body.mutupo,         
+          "username":req.body.username.toLowerCase(),
           "created_at": Date.now(),
           "account_confirmed": false
         }
@@ -114,7 +121,7 @@ user_controller.register = function(req,res){
       }
       else
         //message, data, HTTP code
-        user_controller.email_user(req.query.email,"Hello "+req.query.username + "<br><br><br> Please Click on the link to verify your email.<br><a href="+link+">"+"Click here to verify</a><br><br><br> Ngatisekei Vakomana nevasikana <br><br><br> Sekanevamwe Team","Confirm Account",res); 
+        user_controller.email_user(req.body.email,"Hello "+req.body.username + "<br><br><br> Please Click on the link to verify your email.<br><a href="+link+">"+"Click here to verify</a><br><br><br> Ngatisekei Vakomana nevasikana <br><br><br> Sekanevamwe Team","Confirm Account",res); 
     });
 };
 
@@ -140,8 +147,23 @@ user_controller.email_user = function(useremail,content, subject,res){
   transporter.sendMail(emailoptions,function(error,info){
     if(error){
       res.render('error',{error:"failed to send email", message:"message sending failed"});
-    }else{   
-      res.render('users/email_confirmation',{title:"Email Confirmation"});
+    }else{  
+
+      //but send a flash telling the user to confirm their account 
+      Joke.find({level:"regular"}).sort('-created_at').exec(function(err,jokes){
+            if(!err){
+                Joke.populate(jokes,{path:'author'},function(err,jokes){
+                  if(!err){
+                    res.render('jokes/regular',{title: "Regular Jokes", jokes:jokes,user:req.user});
+                  }else{
+                    res.render('error');
+                  }
+                });
+            }else{
+                res.render('error');
+            }
+          }); 
+      // res.render('jokes/regular',{title:"Email Confirmation"});
       // response.success(res, "Confirmation email was sent successful", null, 200);  
            
     }
@@ -168,12 +190,26 @@ user_controller.validate_email = function(req,res){
         if(!err){
           // console.log("The accounting has been confirmed");
           // response.success(res, "Your account has been successfully confirmed, batai mbabvu tiseke", null, 200);
-          var regular_jokes =Joke.jokes("regular");
-          if(regular_jokes.jokes!=undefined){
-              res.render('jokes/regular',{title: "Regular Jokes", jokes:regular_jokes.jokes}); //the defaulut jokes to be returned are the regular jokes because they harm nobody
-          }else{
-              res.render('error');
-          }
+          // var regular_jokes =Joke.jokes("regular");
+          // if(regular_jokes.jokes!=undefined){
+          //     res.render('jokes/regular',{title: "Regular Jokes", jokes:regular_jokes.jokes}); //the defaulut jokes to be returned are the regular jokes because they harm nobody
+          // }else{
+          //     res.render('error');
+          // }
+          Joke.find({level:"regular"}).sort('-created_at').exec(function(err,jokes){
+            if(!err){
+                Joke.populate(jokes,{path:'author'},function(err,jokes){
+                  if(!err){
+                    res.render('jokes/regular',{title: "Regular Jokes", jokes:jokes,user:req.user});
+                  }else{
+                    res.render('error');
+                  }
+                });
+                
+            }else{
+                res.render('error');
+            }
+          });
         }else{
           // response.failure(res, "couldn't confirm the account", null, 401);
           res.render('error',{error:"Couldn't confirm your account"});

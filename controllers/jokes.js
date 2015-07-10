@@ -4,6 +4,7 @@ var response = require('./../utils/response.js');
 var User = require('./../models/user');
 var Joke = require('./../models/joke');
 var Comment = require('./../models/comment');
+dateFormat=require('dateformat');
 var joke_controller= {};
 
 
@@ -25,19 +26,25 @@ joke_controller.new_joke=function(req,res){
   });
 
   if(req.user.id === author_id){
-    new_joke.save(function(err,joke){
+    new_joke.save(function(err,joke){      
       if(err){
         res.render('error',{error: "An error occured, while trying to make your joke"});
       }else{
-        if(level==="regular"){
-          res.render('jokes/regular',{message:"joke successfully created", joke : joke,title:"Regular Jokes"});
+      User.findOne({id:joke.author},function(err,user){//might need some improvement
+        if(!err){
+          if(level==="regular"){
+             res.render('jokes/show',{message:"joke successfully created", joke : joke,title:"Regular Joke",user:user});
+          }else{            
+            res.render('jokes/show',{message:"joke successfully created", joke : joke,title:"Eighteen Joke",user:user});
+          }
         }else{
-          res.render('jokes/eighteen',{message:"joke successfully created", joke : joke,title:"Eighteen Jokes"});
+          res.render('error',{error: "An error occured, while trying to make your joke"});
         }
+
+        });
+       
       }
-    });
-  }else{
-    res.render('error',{error:"Can't post the joke because you are not logged in"})
+    });  
   }
 }
 
@@ -61,14 +68,29 @@ joke_controller.delete_joke = function(req,res){
 
 joke_controller.show_joke = function(req,res){
   var joke_id = req.params.joke_id;
-  Joke.findOne(joke_id,function(err,joke){
+  Joke.findOne({_id:joke_id},function(err,joke){  
     if(joke){
-        var comments=Joke.comments(joke_id);
-        if(comments.comments != undefined){      
-          res.render('jokes/show',{message:"Joke editing was successful",joke:joke,comments:comments.comments,title:"Joke"});
+      User.findOne({_id:joke.author},function(err,user){        
+        if(!err){
+          Comment.find({joke_id:joke_id},function(err,comments){
+            if(!err){
+              Comment.populate(comments,{path:'author'},function(err,comments){
+                if(!err){
+                  res.render('jokes/show',{message:"Joke editing was successful",joke:joke,comments:comments,joke_author:user,title:"Joke",user:req.user});
+                }else{
+                  res.render('error',{error: "Can't show the jokes comments"});
+                }
+              });
+            }else{
+              res.render('error',{error: "Can't show the jokes comments"});
+            }
+          });
+
         }else{
           res.render('error',{error: "Can't show the jokes comments"});
-        }     
+        }
+      });
+           
     }else{
       res.render('error',{error: "Joke showing failed"});
     }
@@ -79,13 +101,17 @@ joke_controller.show_joke = function(req,res){
 //You can only edit what you posted
 
 joke_controller.edit_joke = function(req,res){
-  var joke_id = req.params.joke_id;
+  var joke_id = req.params.id;
+  console.log("editting Joke");
+  console.log(joke_id);
   console.log(req.user.id);
-  Joke.findOne(joke_id,function(err,joke){
+  Joke.findOne({_id:joke_id},function(err,joke){
     if(joke){  
+
       if(JSON.stringify(joke.author)===JSON.stringify(req.user.id)){ // serialization makes it easy to compare objects
         //will just return to you the original post before editing
-        res.render('jokes/edit',{message:"Joke editing was successful",joke:joke,title:"Edit Joke"});
+        console.log(joke);
+        res.render('jokes/edit',{message:"Joke editing was successful",joke:joke,title:"Edit Joke",id:req.user.id,user:req.user});
       }else{
         res.render('error',{error: "you can't edit because you are not the owner of the post"});
       }
@@ -100,20 +126,31 @@ joke_controller.edit_joke = function(req,res){
 //You can only edit what you posted
 
 joke_controller.update_joke = function(req,res){
-  var joke_id = req.body.joke_id;
-  var content = req.body.content;
-  console.log(content);
-  Joke.findOne(joke_id,function(err,joke){
-      if(joke){
+  var joke_id = req.params.id;
+  var title = req.body.title;
+  var level = req.body.level;
+  var content = req.body.content; 
+  Joke.findOne({_id:joke_id},function(err,joke){   
+      if(joke){      
         if(JSON.stringify(joke.author)===JSON.stringify(req.user.id)){
           joke.content = content;
+          joke.title=title;
+          joke.level= level;
           joke.save(function(err,joke){
-                 var comments=Joke.comments(joke_id);
-                 if(comments.comments != undefined){      
-                   res.render('jokes/show',{message:"Joke updating was successful",joke:joke,comments:comments.comments,title:"Joke"});
-                 }else{
-                   res.render('error',{error: "Can't show the jokes comments"});
-                 }          
+                 Comment.find({joke_id:joke.id},function(err,comments){
+                  if(!err){
+                    Comment.populate(comments,{path:'author'},function(err,comments){
+                      if(!err){
+                         res.render('jokes/show',{message:"Joke updating was successful",joke:joke,comments:comments,title:"Joke",user:req.user});
+                      }else{
+                        res.render('error',{error: "Can't show the jokes comments"});
+                      }
+                    });
+                   
+                  }else{
+                    res.render('error',{error: "Can't show the jokes comments"});
+                  }
+                 });                          
           });
         }else{
             res.render('error',{error: "you can't edit because you are not the owner of the post"});
@@ -135,7 +172,7 @@ joke_controller.flag_joke = function(req,res){
         joke.flags++; //when flag is above 5, change the joke from regular to 18+
         joke.save(function(err,joke){
           if(joke){
-            res.json({message:"Joke successfully flagged",joke:joke});//destroy the html element containg the flagged joke
+            res.json({message:"Joke successfully flagged",joke:joke,user:req.user});//destroy the html element containg the flagged joke
           }else{
             res.json({error:"Can't save the object"});
           }
@@ -152,7 +189,7 @@ joke_controller.all_comments=function(req,res){
   console.log(req);
   Comment.find({joke_id:joke_id},function(err,comments){
     if(!err){
-      res.json({message:"These are all the comments",comments:comments});
+      res.json({message:"These are all the comments",comments:comments,user:req.user});
     }else{
       res.json({error:"Can't return all the comments belonging to the joke"});
     }
@@ -171,7 +208,7 @@ joke_controller.like=function(req,res){
         joke.likes.push(joke_id);
         joke.save(function(err,joke){
           if(!err){
-            res.json({message:"successfully liked the joke",joke:joke});
+            res.json({message:"successfully liked the joke",joke:joke,user:req.user});
           }else{
             res.json({error:"couldn't like the joke"});
           }
@@ -189,9 +226,15 @@ joke_controller.like=function(req,res){
 //all jokes
 
 joke_controller.all_jokes = function(req,res){
-  Joke.find({},function(err,jokes){
-    if(!err){
-      res.render('jokes/all_jokes',{message:"All Jokes",jokes:jokes,level:"all_jokes",title:"All Jokes"});
+  Joke.find({}).sort('-created_at').exec(function(err,jokes){
+    if(!err){      
+       Joke.populate(jokes,{path: 'author'},function(err,jokes){
+        if(!err){
+          res.render('jokes/all_jokes',{message:"All Jokes",jokes:jokes,level:"regular",title:"Regular Jokes",user:req.user});
+        }else{
+          res.render('error',{error:"Can't retrieve jokes"});
+        }
+      });
     }else{
       res.render('error',{error:"Can't retrieve jokes"});
     }
@@ -199,28 +242,37 @@ joke_controller.all_jokes = function(req,res){
 }
 
 joke_controller.regular = function(req,res){
-  Joke.find({level:"regular"},function(err,jokes){
+  Joke.find({level:"regular"}).sort('-created_at').exec(function(err,jokes){
     if(!err){
-      res.render('jokes/regular',{message:"All Jokes",jokes:jokes,level:"regular",title:"Regular Jokes"});
-    }else{
+
+      Joke.populate(jokes,{path: 'author'},function(err,jokes){
+        if(!err){          
+          res.render('jokes/regular',{message:"All Jokes",jokes:jokes,level:"regular",title:"Regular Jokes",user:req.user});
+        }else{
+          res.render('error',{error:"Can't retrieve jokes"});
+        }
+      });
+      }else{
        res.render('error',{error:"Can't retrieve jokes"});
-    }
-    
+    }    
   });
 }
 
 joke_controller.eighteen = function(req,res){
-  Joke.find({level:"regular"},function(err,jokes){
+  Joke.find({level:"eighteen"}).sort('-created_at').exec(function(err,jokes){
     if(!err){
-      res.render('jokes/eighteen',{message:"All Jokes",jokes:jokes, level:"eighteen",title:"18+ Jokes"});
+      Joke.populate(jokes,{path: 'author'},function(err,jokes){
+        if(!err){
+          res.render('jokes/eighteen',{message:"All Jokes",jokes:jokes,level:"regular",title:"Regular Jokes",user:req.user});
+        }else{
+          res.render('error',{error:"Can't retrieve jokes"});
+        }
+      });
     }else{
        res.render('error',{error:"Can't retrieve jokes"});
     }
     
   });
 }
-
-
-
 module.exports = joke_controller;
 

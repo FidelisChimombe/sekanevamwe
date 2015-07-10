@@ -38,6 +38,11 @@ userSchema.methods.validatePassword = function (password, callback) {
   });
 }
 
+
+user_logged_in = function(){
+  console.log("Fidelis This is Global");
+}
+
 //implement getUser method, which will give you the logged in user at any time.
 
 

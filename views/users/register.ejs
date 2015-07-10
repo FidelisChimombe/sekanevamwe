@@ -1,0 +1,29 @@
+ <% layout('layouts/main-layout') -%>
+    <div id="register">
+             <form action="/users/register" method="post">
+                <table>
+                    <tr class="t-form-rows">
+                        <td class="first-column-input"> <label>Username</label></td>
+                        <td><input class="input-fields" type="text" name="username" required/></td>
+                    </tr>
+
+                     <tr class="t-form-rows">
+                        <td class="first-column-input"> <label>Email</label></td>
+                        <td><input class="input-fields" type="email" name="email" required/></td>
+                    </tr>
+                    <tr class="t-form-rows">
+                        <td class="first-column-input"> <label>Password</label></td>
+                        <td><input class="input-fields" type="password" name="password" id="password" required/></td>
+                    </tr>
+
+                    <tr class="t-form-rows">
+                        <td class="first-column-input"> <label>Password Confirmation</label></td>
+                        <td><input class="input-fields" type="password" name="confirm_password" id="confirm_password" required/></td>
+                    </tr>                   
+                    <tr class="t-form-rows">                        
+                        <td> <input type="submit" value="Submit"/></td>                     
+                    </tr>                                       
+                </table>
+            </form>         
+    </div> 
+   <script type="text/javascript" src="/javascripts/signup_user_validation.js"></script>

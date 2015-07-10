@@ -4,6 +4,7 @@ var router = express.Router();
 var user_controller=require('./../controllers/users');
 var response = require('./../utils/response.js');
 var User = require('./../models/user');
+var Joke = require('./../models/joke');
 require('./../utils/auth.js');
 
 
@@ -36,30 +37,58 @@ router.post('/register',function(req,res){
   user_controller.register(req,res);
 });
 
+router.get('/register',function(req,res){
+  res.render('users/register', { title: 'Sekanevamwe',title:"Regular Jokes",user:req.user});
+  });
+
 
 
 //logs in a user into the system
 router.post('/login',passport.authenticate('local',{session:true, successFlash: 'Welcome!'}),function(req,res){
   //redirect the user with to the right page, since this is a one page application, will return json data to the client
   //wanna send something back to the server
-  res.render('jokes/regular',{message:"zvaita", user:req.user,title:"Regular"});
+  Joke.find({level:"regular"}).sort('-created_at').exec(function(err,jokes){
+    if(!err){
+      res.render('jokes/regular',{message:"zvaita", user:req.user,title:"Regular",jokes:jokes});
+    }else{
+      res.render('error');
+    }
+  });
+  
  
 });
 
 router.get('/login',function(req,res){
-  res.render('users/login',{data:null,title:"Login"});
+  res.render('users/login',{user:req.user, title:"Login"});
 });
 
 
   
 router.get('/logout',function(req,res){ 
   req.logout();
-  res.redirect('/users/login');
+   Joke.find({level:"regular"}).sort('-created_at').exec(function(err,jokes){
+    if(!err){
+      Joke.populate(jokes,{path:'author'},function(err,jokes){
+        if(!err){
+           res.render('jokes/regular', { title: 'Sekanevamwe', what: 'best', who: 'me',title:"Regular Jokes",jokes:jokes,user:req.user});
+        }else{
+          res.render('error');
+        }
+      });
+     
+    }else{
+      res.render('error');
+    }
+  }); 
 });
 
 //validates the email address of the account owner
 router.get('/validate',function(req,res){
   user_controller.validate_email(req,res);
+});
+
+router.get('/register',function(req,res){
+  res.render('users/register',{title:"Register Account"});
 });
 
 /* GET users listing. */

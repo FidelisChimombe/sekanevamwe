@@ -2,22 +2,27 @@
 <html>
   <head>
     <title><%= title %></title>
-    <link rel='stylesheet' href='/stylesheets/style.css' />
+    <link rel='stylesheet' href='/stylesheets/style.css' />    
+   
     <script src="https://code.jquery.com/jquery-1.11.1.min.js"></script>
+     
     <!-- Latest compiled and minified CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
    
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css">
  
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="/javascripts/timeago.js"></script><!--Used to do time ago-->
+    <script type="text/javascript" src="/javascripts/client.js"></script> 
+   
   </head>
   <body>
    
   <header>
     <%-partial('partials/header')%> 
+    
   </header>   
-    <section> 
-      
+    <section>       
         <%- body -%>           
       </section>
   </body>

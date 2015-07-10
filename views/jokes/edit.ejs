@@ -1,1 +1,31 @@
 <% layout('layouts/main-layout') -%>
+        <form action="/jokes/update/<%=joke.id%>" method="post" id="update_joke_form">
+             <table>
+                <tr>
+                    <td><label>Joke Title</label> </td>
+                    <td> <input type="text" name="title" value="<%=joke.title %>"></td>
+                </tr>
+
+                 <tr>
+                    <td><label>Joke</label> </td>
+                    <td> <textarea name="content" form="update_joke_form" ><%= joke.content%></textarea></td>
+                </tr>
+
+                 <tr>
+                    <td>  <input type="hidden" name="id" value='<%=id%>'/></td>
+                </tr>
+
+                 <tr>
+                    <td><label>Level</label> </td>
+                    <td><select name="level">
+                          <option value="regular">Regular</option> 
+                          <option value="eighteen">18+ </option>                         
+                        </select> 
+                    </td>
+                </tr>
+
+                 <tr>                  
+                    <td> <input type="submit" value="Save"/></td>
+                </tr>
+             </table>
+        </form>

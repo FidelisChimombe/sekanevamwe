@@ -18,7 +18,7 @@ var validate_user = function(user){
   if (validator.isNull(user.username)){
     error.push("username is required");
   }
-  else if (!validator.isLength(user.username, 3, 20))
+  else if (!validator.isLength(user.username, 2, 50))
     error.push("Name can only be between 3 and 50 characters");
   //email: is email
   if (validator.isNull(user.email)){
@@ -30,23 +30,8 @@ var validate_user = function(user){
   if (validator.isNull(user.password)){
     error.push("Password is required");
   }
-  else if (!validator.isLength(user.password, 8))
-    error.push("Password should be at least 8 characters");
-
-  // if(!validator.isNull(user.name)){
-  //   if (!validator.isLength(user.name, 1, 20)){
-  //     error.push("Name can only be between 1 and 50 characters");
-  //   }
-
-  // }
-
-  // if(!validator.isNull(user.surname)){
-  //   if (!validator.isLength(user.surname, 2, 20)){
-  //     error.push("Name can only be between 2 and 50 characters");
-  //   }
-
-  // }
-
+  else if (!validator.isLength(user.password, 6))
+    error.push("Password should be at least 6 characters");
   
   return error;
 };

@@ -1,0 +1,21 @@
+<% layout('layouts/main-layout') -%>
+<table>
+<% jokes.forEach(function(joke){%>
+  <tr>
+    <td>
+      <div><%-img_tag("/images/Thumb-Up-icon.png","") -%></div>
+      <div><%-img_tag("/images/Thumb-Down-icon.png","") -%></div>
+    </td>
+    <td>
+      <div><%-img_tag("/images/profile_pic.png","") -%></div>
+    </td>
+    <td>
+      <div><%=joke.title%></div>
+      <div><td><%-link_to('read more')%></td> </div>      
+    </td>
+
+  </tr>
+<%})%>
+</table>
+
+

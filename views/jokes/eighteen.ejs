@@ -1,2 +1,27 @@
 <% layout('layouts/main-layout') -%>
-<%= "18+" %>
+<div class="display">
+<table>
+<% jokes.forEach(function(joke){%>
+  <tr class="joke-row">
+    <td>
+      <div> <button type="button" class="like"></button></div>
+      <div> <button type="button" class="dislike"></button></div>
+    </td>
+    <td>
+      <div><img src="/images/profile_pic.png" class="profile_picture"></div>
+    </td>
+    <td class="joke-title-row">
+      <div class="joke-title"><b><a href="/jokes/show/<%=joke.id%>"><%=joke.title%></a></b></div>
+
+      <div>
+        
+        <div class="inner-joke" ><%= joke.comments.length%><a href="/jokes/show/<%=joke.id%>"><%= " comments"%></a></div>
+        <div class="inner-joke"><%= joke.likes.length%><%= " likes"%></a></div>
+        <div class="inner-joke"><time class="timeago" datetime='<%=joke.created_at.toISOString()%>'><%=joke.created_at.toISOString()%></time></div>
+      </div>      
+    </td>
+
+  </tr>
+<%})%>
+</table>
+</div>

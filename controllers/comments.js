@@ -21,16 +21,25 @@ comment_controller.new_comment=function(req,res){
     created_at: created_at,
     });
 
-  if(JSON.stringify(req.user.id) ===JSON.stringify(author_id)){
+  if(JSON.stringify(req.user.id) === JSON.stringify(author_id)){
     new_comment.save(function(err,comment){
       if(err){
         res.json({error: "An error occured, while trying to make your comment"});
-      }else{
-        res.json({message:"comment successfully created", comment : comment})
+      }else{ 
+        //on success add the comment id in the Joke comments
+        Joke.findOne(joke_id,function(err,joke){
+          if(!err){
+            joke.comments.push(comment.id);
+            res.json({message:"comment successfully created", comment : comment, joke_comments:joke.comments,user:req.user});
+          }else{
+            res.json({message:"Can't post the comment because you are not logged in"});
+          }
+        });
+       
       }
     });
   }else{
-    res.json({message:"Can't post the comment because you are not logged in"})
+    res.json({message:"Can't post the comment because you are not logged in"});
   }
 }
 
@@ -41,7 +50,7 @@ comment_controller.delete_comment = function(req,res){
   if(JSON.stringify(req.user.id) ===JSON.stringify(author_id)){
     Comment.findByIdAndRemove({id:comment_id},function(err){
       if(!err){
-        res.json({message:"Comment successfully deleted"})
+        res.json({message:"Comment successfully deleted",user:req.user});
       }else{
         res.json({message:"Comment couldn't be deleted"});
       }
@@ -60,7 +69,7 @@ comment_controller.edit_comment = function(req,res){
     if(comment){
       if(JSON.stringify(req.user.id) ===JSON.stringify(author_id)){
         //will just return to you the original post before editing
-        res.json({comment:comment});
+        res.json({comment:comment,user:req.user});
       }else{
         res.json({message: "you can't edit because you are not the owner of the comment"});
       }
@@ -84,7 +93,7 @@ comment_controller.update_comment = function(req,res){
         comment.content = content;
         comment.save(function(err,comment){
           if(!err){
-            res.json({message:"Comment successfully updated", comment:comment});
+            res.json({message:"Comment successfully updated", comment:comment,user:req.user});
           }else{
             res.json({message:"Comment updating failed"});
           }

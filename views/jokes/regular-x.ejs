@@ -1,0 +1,93 @@
+<% layout('layouts/main-layout') -%>
+
+<% jokes.forEach(function(joke){%>
+ 
+    <div class="jokes-container">
+      <div class="joke-title">
+      <table>
+        <tr>
+          <td class="joke-head"><b><span><%=joke.title.substr(0,60)%></span></b></td>
+          <td class="joke-head"><%=joke.author.username%></td>
+          <td class="joke-head"><b><%=dateFormat(joke.created_at, "dddd, mmmm dS, yyyy, h:MM")%></b></td>
+
+          <%if(user.username===joke.author.username){%>
+            <td class="joke-head"><%-link_to('edit','edit/'+joke.id)%></td>
+          <%}%>
+
+        </tr>
+      </table>
+          
+      </div>
+
+
+      <div>      
+        <table>
+          
+          <%if(joke.content.length>80){%> 
+            <tr>
+              <td><%=joke.content.substr(0,80)%></td>
+            </tr>
+              <tr>
+                <td><%-link_to('more','show/'+joke.id)%></td>            
+              </tr> 
+          <%}else{%> 
+            <tr>
+                <td><%=joke.content.substr(0,80)%></td>
+            </tr>
+          <%}%> 
+
+          <tr>
+            <td><%-link_to('likes')%></td> 
+            <td><%-link_to('comments')%></td>    
+          </tr>
+
+          <tr>
+             <form action="/comments/new_comment" method="post" id="comment_form"> 
+              <td>               
+                   <input type="hidden" name="id" value='<%=joke.id%>'/>
+                   <input type="text" name="content" />       
+               
+              </td>
+              <td>
+                <input type="submit" value="Comment" /> 
+              </td>
+             </form>
+          </tr>
+
+        </table>
+    </div>
+  </div>
+  <%})%>
+
+
+  
+    <div id="main-second-header">
+        <div class="second-header">
+          <form action = "/jokes/regular" method = "get">
+              <input class="second-header-button" type="submit" value="Regular" id="regular-jokes"/>
+          </form>
+        </div>
+
+         <div class="second-header">
+          <form action = "/jokes/eighteen" method = "get">
+              <input  class="second-header-button" type="submit" value="18+" id="eighteen-jokes"/>
+          </form>
+        </div>
+
+         <div class="second-header">
+          <form action = "/jokes/all_jokes" method = "get">
+              <input  class="second-header-button" type="submit" value="All Jokes" id="all-jokes"/>
+          </form>
+        </div>
+
+         <div class="second-header">
+          <form action = "/jokes/new_joke" method = "get">
+              <input  class="second-header-button" type="submit" value="New Joke" id="new-joke"/>
+          </form>
+        </div>
+
+
+        
+    </div>
+
+
