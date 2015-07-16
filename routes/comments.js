@@ -7,6 +7,7 @@ var User = require('./../models/user');
 require('./../utils/auth.js');
 
 
+
 router.post('/new_comment',function(req,res){
   comment_controller.new_comment(req,res);
 });

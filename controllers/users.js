@@ -34,7 +34,7 @@ user_controller.register = function(req,res){
     [ //Validate the user input
     //remember to correct the req.query
       function(callback){
-        console.log(req.body);
+        
         var errors = custom_validator.validate(req.body);
         if (errors.length != 0){
           
@@ -121,7 +121,7 @@ user_controller.register = function(req,res){
       }
       else
         //message, data, HTTP code
-        user_controller.email_user(req.body.email,"Hello "+req.body.username + "<br><br><br> Please Click on the link to verify your email.<br><a href="+link+">"+"Click here to verify</a><br><br><br> Ngatisekei Vakomana nevasikana <br><br><br> Sekanevamwe Team","Confirm Account",res); 
+        user_controller.email_user(req.body.email,"Hello "+req.body.username + "<br><br><br> Please Click on the link to verify your email.<br><a href="+link+">"+"Click here to verify</a><br><br><br> Ngatisekei Vakomana nevasikana <br><br><br> Sekanevamwe Team","Confirm Account",req,res); 
     });
 };
 
@@ -136,7 +136,7 @@ var transporter = nodemailer.createTransport({
 /*Sends an email to the user on behalf of us
 *TODO add the page to be redirected after a successful message sending
 */
-user_controller.email_user = function(useremail,content, subject,res){
+user_controller.email_user = function(useremail,content, subject,req,res){
   var emailoptions = {
     from: 'beaverlist@gmail.com',
     to: useremail,
@@ -176,8 +176,7 @@ user_controller.email_user = function(useremail,content, subject,res){
 *receives the account confirmation token from the owner of the email address
 */
 user_controller.validate_email = function(req,res){
-  var token = req.query.uniqueIdentifier;
-  console.log("the token is " + token);
+  var token = req.query.uniqueIdentifier;  
   if(typeof token === "object"){ //sanitization of the inputs
     token = JSON.stringify(encrypted_code);
   }

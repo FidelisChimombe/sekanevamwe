@@ -2,6 +2,8 @@ var mongoose = require('mongoose');
 var Comment = require('./../models/comment');
 
 
+
+
 var Schema = mongoose.Schema;
 
 var jokeSchema = new Schema({

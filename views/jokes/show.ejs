@@ -2,7 +2,6 @@
 <% layout('layouts/main-layout') -%>
 <div class="display">
 <table>
-
   <tr class="joke-row">
     <% if(user){%>
       <td class="inlineb">
@@ -24,18 +23,35 @@
 
   </tr>
   <tr>
-    <td><%= joke.content %></td>
+    <td><div><%= joke.content %></div></td>
   </tr>
 
   <% if(user){%>
-    <form action = "/comments/new_comment" method = "post">
-      <tr>  
-        <td><input class="input-fields" type="text"  /></td>
-        <td><input type="hidden" name="joke_id" value='<%=joke.id%>'/></td>
-        <td><input type="hidden" name="author_id" value='<%=user.id%>'/></td>
-        <td><input class="" type="submit" value="comment"/></td>    
-      </tr>
-    </form>
+    <tr>  
+      <td><input id="joke-comment-content" class="input-fields" type="text"  /></td>
+      <td><input id="joke-comment-id" type="hidden" name="joke_id" value='<%=joke.id%>'/></td>
+      <td><input id="joke-author-id" type="hidden" name="author_id" value='<%=user.id%>'/></td>
+      <td><button class="comment-button" onclick="comment()" id="comment-button">comment</button></td>        
+    </tr>   
   <%}%>
+</table>
+<table id="table-comments">
+  <%comments.forEach(function(comment){%>
+    <tr class="joke-comments">
+      <td>
+        <div><img src="/images/profile_pic.png" class="profile_picture"></div>
+        <div><%=comment.author.username%></div>
+      </td>
+      <td>
+        <div><%= comment.content%></div>
+         <div class="inner-joke"><time class="timeago" 
+
+         datetime='<%=comment.created_at.toISOString()%>'><%=comment.created_at.toISOString()%></time>
+         </div> 
+      </td>
+      
+         
+    </tr>
+  <%});%>
 </table>
 </div>

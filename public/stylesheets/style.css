@@ -16,6 +16,16 @@
   border-width:1px;
 }
 
+#comment-button{
+  width:77px;
+  height:40px;
+  border-radius:5px;
+}
+
+.joke-comments{
+  height:90px;
+}
+
 textarea{
   max-width:490px;  
   border-radius:5px;

@@ -13,21 +13,13 @@ var methodOverride = require('method-override');
 var engine = require('ejs-mate');
 var moment = require('moment');
 var timeago = require('timeago');
-
-
-var app = express();
-
+var User = require('./models/user');
+var Joke = require('./models/joke');
+var Comment = require('./models/comment');
+var app =express();
+var server = app.listen(8080);
+var client = require('socket.io').listen(server).sockets;
 var helpers = require('express-helpers')(app); //automatically includes all view-helpers
-
-
-
-console.log(timeago(new Date()));
-
-
-
-
-
-
 
 
 
@@ -42,7 +34,66 @@ db.on('error',function(){
 
 db.once('open',function(){
     console.log("Successfully connected to Sekanevamwe database ...");
-});
+    client.on('connection',function(socket){
+      socket.on('like',function(data){      
+      var joke_id=data.joke_id;
+      var user_id=data.user_id;     
+      Joke.findOne({_id:joke_id},function(err,joke){  
+
+          if(joke){
+
+            if(joke.likes.indexOf(user_id)===-1){ //check for the person liking no the joke id              
+              joke.likes.push(user_id);
+                joke.save(function(err,joke){
+                  if(!err){                         
+                    client.emit('like_update',{joke:joke});//send back like update
+                  }else{
+                    client.emit('error',{error:"joke couldn't be saved"});
+                  }
+                });
+            }else{
+              client.emit('already_liked_the_joke',{joke:joke});
+            }
+          }else{             
+            client.emit('error',{error:"joke couldn't be found"});
+          }
+        });
+
+      }); 
+
+    socket.on('comment',function(data){
+      
+        var author_id = data.author_id;
+        var joke_id = data.joke_id;
+        var content = data.content;
+        var created_at = Date.now();
+        var new_comment = new Comment({
+          author: author_id,
+          content: content,
+          joke_id : joke_id,
+          created_at: created_at,
+          });
+
+       
+          new_comment.save(function(err,comment){
+            if(err){             
+              client.emit('error',{error:"couldn't save comment"});
+            }else{ 
+              //on success add the comment id in the Joke comments
+              
+              Joke.findOne(joke_id,function(err,joke){
+                if(!err){
+                  joke.comments.push(comment.id);
+                  client.emit('new_comment',{message:"comment successfully created", comment : comment, joke_comments:joke.comments});
+                }else{
+                  client.emit('error',{error:"couldn't find joke"});
+                }
+              });             
+            }
+          });
+        });
+      });
+    });
 
 // view engine setup
 app.engine('ejs',engine);
@@ -116,6 +167,4 @@ app.use(function(err, req, res, next) {
         error: {}
     });
 });
-
-
 module.exports = app;

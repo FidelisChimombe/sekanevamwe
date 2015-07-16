@@ -45,7 +45,7 @@ router.get('/all_comments/:joke_id',function(req,res){
   joke_controller.all_comments(req,res);
 });
 
-router.post('/like',function(req,res){//gotta work on liking a little bit more
+router.post('/like/:joke_id',function(req,res){//gotta work on liking a little bit more
   joke_controller.like(req,res);
 });
 

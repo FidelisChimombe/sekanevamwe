@@ -6,6 +6,8 @@ var Joke = require('./../models/joke');
 var Comment = require('./../models/comment');
 var comment_controller= {};
 
+
+
 //can only comment if you are logged in
 comment_controller.new_comment=function(req,res){
   var author_id = req.user.id;

@@ -4,9 +4,7 @@ var response = require('./../utils/response.js');
 var User = require('./../models/user');
 var Joke = require('./../models/joke');
 var Comment = require('./../models/comment');
-dateFormat=require('dateformat');
 var joke_controller= {};
-
 
 joke_controller.new_joke=function(req,res){
   var author_id = req.body.id;//put req.user though
@@ -30,12 +28,13 @@ joke_controller.new_joke=function(req,res){
       if(err){
         res.render('error',{error: "An error occured, while trying to make your joke"});
       }else{
-      User.findOne({id:joke.author},function(err,user){//might need some improvement
-        if(!err){
+      User.findOne({_id:joke.author},function(err,user){//might need some improvement
+        if(!err){          
           if(level==="regular"){
-             res.render('jokes/show',{message:"joke successfully created", joke : joke,title:"Regular Joke",user:user});
+
+             res.render('jokes/show',{message:"joke successfully created", joke :joke,title:"Regular Joke",user:req.user,comments:joke.comments});
           }else{            
-            res.render('jokes/show',{message:"joke successfully created", joke : joke,title:"Eighteen Joke",user:user});
+            res.render('jokes/show',{message:"joke successfully created", joke : joke,title:"Eighteen Joke",user:req.user,comments:joke.comments});
           }
         }else{
           res.render('error',{error: "An error occured, while trying to make your joke"});
@@ -72,7 +71,7 @@ joke_controller.show_joke = function(req,res){
     if(joke){
       User.findOne({_id:joke.author},function(err,user){        
         if(!err){
-          Comment.find({joke_id:joke_id},function(err,comments){
+          Comment.find({joke_id:joke_id}).sort('-created_at').exec(function(err,comments){
             if(!err){
               Comment.populate(comments,{path:'author'},function(err,comments){
                 if(!err){
@@ -109,8 +108,7 @@ joke_controller.edit_joke = function(req,res){
     if(joke){  
 
       if(JSON.stringify(joke.author)===JSON.stringify(req.user.id)){ // serialization makes it easy to compare objects
-        //will just return to you the original post before editing
-        console.log(joke);
+        //will just return to you the original post before editing        
         res.render('jokes/edit',{message:"Joke editing was successful",joke:joke,title:"Edit Joke",id:req.user.id,user:req.user});
       }else{
         res.render('error',{error: "you can't edit because you are not the owner of the post"});
@@ -200,24 +198,34 @@ joke_controller.all_comments=function(req,res){
 
 */
 
+
+
 joke_controller.like=function(req,res){
-  var joke_id= req.body.joke_id;
-  Joke.findOne(joke_id,function(err,joke){
+  var joke_id= req.params.joke_id;
+  
+  Joke.findOne({_id:joke_id},function(err,joke){
+    
     if(joke){
-      if(joke.likes.indexOf(joke_id)===-1){ //check for the person liking no the joke id
-        joke.likes.push(joke_id);
+      if(joke.likes.indexOf(req.user.id)===-1){ //check for the person liking no the joke id
+        
+        joke.likes.push(req.user.id);
         joke.save(function(err,joke){
           if(!err){
+            
+            console.log("Zvabhadhara");
+
+
             res.json({message:"successfully liked the joke",joke:joke,user:req.user});
           }else{
-            res.json({error:"couldn't like the joke"});
+            res.render('error',{error:"couldn't like the joke"});
           }
         });
       }else{
-        res.json({error:"You have already liked the joke"});
+        console.log("Zvabhadhara Pasina");
+        res.render('error',{error:"You have already liked the joke"});
       }
     }else{
-      res.json({error:"Can't like the joke"});
+      res.render('error',{error:"Can't like the joke"});
     }
   });
 
