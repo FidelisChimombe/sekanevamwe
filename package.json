@@ -16,6 +16,32 @@
     "ejs-mate": "^2.2.0",
     "express-helpers": "^1.3.2",
     "moment": "^2.10.3",
-    "socket.io": "^1.3.5"
+    "socket.io": "^1.3.5",
+    "async":"*",
+    "bcrypt":"*",
+    "connect-flash":"*",
+    "connect-mongo":"*",
+    "connect-mongostore":"*",
+    "ejs":"*",
+    "ejs-mate":"*",
+    "express-session":"*",
+    "gulp":"*",
+    "gulp-develop-server":"*",
+    "gulp-ejs":"*",
+    "gulp-less":"*",
+    "gulp-livereload":"*",
+    "gulp-supervisor":"*",
+    "gulp-util":"*",
+    "jwt-simple":"*",
+    "method-override":"*",
+    "moment":"*",
+    "mongoose":"*",
+    "nodemailer":"*",
+    "passport":"*",
+    "passport-local":"*",
+    "session":"*",
+    "validator":"*",
+    "timeago":"*"
+
   }
 }
