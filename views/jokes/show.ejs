@@ -5,7 +5,7 @@
   <tr class="joke-row">
     <% if(user){%>
       <td class="inlineb">
-        <div> <button type="button" class="like"></button></div>
+        <div> <button type="button" class="like" onclick='like(this)' value="<%=joke.id%> <%=user.id%>"></button></div>
         <div> <button type="button" class="dislike"></button></div>
       </td>
     <%}%>
@@ -14,23 +14,26 @@
     </td>
     <td class="joke-title-row inlineb">
       <div class="joke-title"><b><%=joke.title%></b></div>
-      <div>        
-        <div class="inner-joke" ><%=joke.comments.length + " comments"%></div>
-        <div class="inner-joke"><%=" "+ joke.likes.length + " likes "%></div>
+      <div> 
+
+        <div class="inner-joke" id="show_<%=joke.id%>"><%=comments.length + " comments"%></div>
+        <div class="inner-joke"><span id="likes_<%=joke.id%>"><%= joke.likes.length%><span><%= " likes "%></div>
         <div class="inner-joke"><time class="timeago" datetime='<%=joke.created_at.toISOString()%>'><%=joke.created_at.toISOString()%></time></div>
+        <div class="inner-joke"><span><%= "by " %><%= author%></span></div>
       </div>      
     </td>
 
   </tr>
   <tr>
-    <td><div><%= joke.content %></div></td>
+    <td><div><pre><%= joke.content %></pre></div></td>
   </tr>
 
   <% if(user){%>
     <tr>  
-      <td><input id="joke-comment-content" class="input-fields" type="text"  /></td>
+      <td><input id="joke-comment-content" class="input-fields" type="text"  required/></td>
       <td><input id="joke-comment-id" type="hidden" name="joke_id" value='<%=joke.id%>'/></td>
       <td><input id="joke-author-id" type="hidden" name="author_id" value='<%=user.id%>'/></td>
+      <td><input id="joke-comment-username" type="hidden" name="username" value='<%=user.username%>'/></td>
       <td><button class="comment-button" onclick="comment()" id="comment-button">comment</button></td>        
     </tr>   
   <%}%>
@@ -40,14 +43,13 @@
     <tr class="joke-comments">
       <td>
         <div><img src="/images/profile_pic.png" class="profile_picture"></div>
-        <div><%=comment.author.username%></div>
+        <div class="inner-joke"><span><b><%= comment.author.username%></b></span></div>
       </td>
       <td>
-        <div><%= comment.content%></div>
-         <div class="inner-joke"><time class="timeago" 
-
-         datetime='<%=comment.created_at.toISOString()%>'><%=comment.created_at.toISOString()%></time>
+        <div><pre><%= comment.content%></pre></div>
+         <div class="inner-joke"><time class="timeago" datetime='<%=comment.created_at.toISOString()%>'><%=comment.created_at.toISOString()%></time>
          </div> 
+
       </td>
       
          

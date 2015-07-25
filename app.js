@@ -67,6 +67,7 @@ db.once('open',function(){
         var joke_id = data.joke_id;
         var content = data.content;
         var created_at = Date.now();
+        var username = data.username;
         var new_comment = new Comment({
           author: author_id,
           content: content,
@@ -81,10 +82,19 @@ db.once('open',function(){
             }else{ 
               //on success add the comment id in the Joke comments
               
-              Joke.findOne(joke_id,function(err,joke){
+              Joke.findOne({_id:joke_id},function(err,joke){
                 if(!err){
+                  
                   joke.comments.push(comment.id);
-                  client.emit('new_comment',{message:"comment successfully created", comment : comment, joke_comments:joke.comments});
+                  
+                  joke.save(function(err,joke){
+                    if(!err){
+                      client.emit('new_comment',{message:"comment successfully created", comment : comment, joke_comments:joke.comments,joke:joke,username:username});
+                    }else{
+                      client.emit('error',{error:"couldn't save joke"});
+                    }
+                  });
+                  
                 }else{
                   client.emit('error',{error:"couldn't find joke"});
                 }

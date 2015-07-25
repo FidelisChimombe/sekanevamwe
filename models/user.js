@@ -9,8 +9,8 @@ var userSchema = new Schema({
   password: {type: String},
   mutupo : {type: String},
   password_hash: {type: String},
-  created_at: {type: Date},
-  account_confirmed: {type: Boolean}
+  created_at: {type: Date}
+  //account_confirmed: {type: Boolean}
 });
 
 //INSTANCE METHODS
@@ -37,16 +37,6 @@ userSchema.methods.validatePassword = function (password, callback) {
     }
   });
 }
-
-
-user_logged_in = function(){
-  console.log("Fidelis This is Global");
-}
-
-//implement getUser method, which will give you the logged in user at any time.
-
-
-
 user = mongoose.model('User',userSchema);
 module.exports = user;
 

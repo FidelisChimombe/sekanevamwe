@@ -1,8 +1,9 @@
-
+  
     <div id="main-first-header" class="inlineb">
         <div class="logo-header inlineb" id="left-logo">
-          <img src="/images/sekanevamwe.jpg" id="logo">
-
+          <a href="/">
+            <img src="/images/sekanevamwe.jpg" id="logo">
+          </a>
         </div>     
 
         <div  class="logo-header inlineb" id="right-logo">
@@ -31,11 +32,11 @@
     </div>
     <div id="joke-regulator" class="">
           <ul class="horizontal-navigation">
-            <li class="navigator"><a href="/jokes/regular">Regular</a></li>
-            <li class="navigator"><a href="/jokes/eighteen">18+</a></li>
-            <li class="navigator"><a href="/jokes/all_jokes">All Jokes</a></li>
+            <li class="navigator" title="Regular Jokes" style="border-top-left-radius: 6px"><a href="/jokes/regular">Regular</a></li>
+            <li class="navigator" title="18+ Jokes"><a href="/jokes/eighteen">18+</a></li>
+            <li class="navigator" title="All Jokes"><a href="/jokes/all_jokes">All Jokes</a></li>
             <%if(user){%>
-              <li class="navigator"><a href="/jokes/new_joke">New Joke</a></li>
+              <li class="navigator" style="border-top-right-radius: 6px"><a href="/jokes/new_joke">New Joke</a></li>
             <%}%>    
           </ul>
         </div>

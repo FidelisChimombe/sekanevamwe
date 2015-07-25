@@ -27,7 +27,8 @@
 }
 
 textarea{
-  max-width:490px;  
+  min-width:490px;
+  max-width:490px;
   border-radius:5px;
   outline:0px;
   border-color:black;
@@ -48,7 +49,7 @@ textarea{
   width: 60%;
   margin-top: 2px;   
   font-size: 15px;
-  background-color: red;
+  
 
 
 }
@@ -57,7 +58,10 @@ textarea{
   margin: 5px;
   margin-left: 5%;
   border-radius: 2px;
-  height:15px;
+  background-color:  #66FF66;
+  font-size: 20px;
+  width:140px;
+  text-align: center;
 
  
 }
@@ -71,7 +75,11 @@ textarea{
 
 .navigator{
     float: left;
-    padding:2%;
+    padding:5px;    
+    border-top-right-radius: 8px;
+    margin-left: 2px;
+    border-bottom-right-radius: 8px;
+    
    
 }
 
@@ -81,11 +89,19 @@ textarea{
 }
 
 
+.errors{
+  color:red;
+}
 
+
+pre{
+  width:500px;
+}
 
 
 .nav{
   margin-right: 50px;
+  margin-top: 10px;
 }
 
 
@@ -156,7 +172,10 @@ research display: block and display : inline;
 .joke-title{
   font-size: 15px;
 }
+button{
+  outline: 0px;
 
+}
 .joke-row{
   height:100px;
 }
@@ -164,6 +183,10 @@ research display: block and display : inline;
 .joke-title-row{
   height:20px;
   
+}
+
+.div_2_styling{
+  font-style: bold;
 }
 
 section{ 

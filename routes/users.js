@@ -1,5 +1,5 @@
 var express = require('express');
-var passport = require('passport');
+passport = require('passport');
 var router = express.Router();
 var user_controller=require('./../controllers/users');
 var response = require('./../utils/response.js');
@@ -44,12 +44,18 @@ router.get('/register',function(req,res){
 
 
 //logs in a user into the system
-router.post('/login',passport.authenticate('local',{session:true, successFlash: 'Welcome!'}),function(req,res){
+router.post('/login',passport.authenticate('local',{session:true,  failureRedirect: '/users/login',errors:{error:"username/password combination not agreeing"}}),function(req,res){
   //redirect the user with to the right page, since this is a one page application, will return json data to the client
   //wanna send something back to the server
   Joke.find({level:"regular"}).sort('-created_at').exec(function(err,jokes){
     if(!err){
-      res.render('jokes/regular',{message:"zvaita", user:req.user,title:"Regular",jokes:jokes});
+      Joke.populate(jokes,{path:'author'},function(err,jokes){
+        if(!err){
+           res.render('jokes/regular', { title: 'Sekanevamwe', what: 'best', who: 'me',title:"Regular Jokes",jokes:jokes,user:req.user});
+        }else{
+          res.render('error',{title:"error"});
+        }
+      });
     }else{
       res.render('error');
     }
@@ -59,7 +65,7 @@ router.post('/login',passport.authenticate('local',{session:true, successFlash: 
 });
 
 router.get('/login',function(req,res){
-  res.render('users/login',{user:req.user, title:"Login"});
+  res.render('users/login',{user:req.user, title:"Login",errors:{}});
 });
 
 
@@ -72,12 +78,12 @@ router.get('/logout',function(req,res){
         if(!err){
            res.render('jokes/regular', { title: 'Sekanevamwe', what: 'best', who: 'me',title:"Regular Jokes",jokes:jokes,user:req.user});
         }else{
-          res.render('error');
+          res.render('error',{title:"error"});
         }
       });
      
     }else{
-      res.render('error');
+      res.render('error',{title:"error"});
     }
   }); 
 });

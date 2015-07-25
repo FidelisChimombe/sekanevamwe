@@ -1,14 +1,22 @@
-    <% layout('layouts/main-layout') -%>
+ <% layout('layouts/main-layout') -%>
+ <% if(Object.getOwnPropertyNames(errors).length===0){%>
+    
+ <%}else{%>
+    <ul>
+        <li class="errors"><%=errors.error%></li>
+    </ul>
+ <%}%>
+
     <div id="login">
              <form action="/users/login" method="post">
                 <table>
                     <tr class="t-form-rows">
                         <td class="first-column-input"> <label>Username:</label></td>
-                        <td><input class="input-fields" type="text" name="username"/></td>
+                        <td><input class="input-fields" type="text" name="username" required/></td>
                     </tr>
                     <tr class="t-form-rows">
                         <td class="first-column-input"> <label>Password:</label></td>
-                        <td><input  class="input-fields" type="password" name="password"/></td>
+                        <td><input  class="input-fields" type="password" name="password" required/></td>
                     </tr>
                     <tr class="t-form-rows">
                         <td class="first-column-input"> </td>

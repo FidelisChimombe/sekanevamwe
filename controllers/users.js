@@ -29,32 +29,33 @@ user_controller.register = function(req,res){
 
   //attempt to register the user 
   
-  var link = 'http://'+ req.headers.host +'/users/validate?uniqueIdentifier=' // link to confirm account
+  var link = 'http://'+ req.headers.host ;//+'/users/validate?uniqueIdentifier=' // link to confirm account
   async.waterfall(
     [ //Validate the user input
-    //remember to correct the req.query
-      function(callback){
-        
-        var errors = custom_validator.validate(req.body);
-        if (errors.length != 0){
+    //remember to correct the req.query // I am already doing front-end validation.
+      // function(callback){        
+      //   var errors = custom_validator.validate(req.body);
+      //   if (errors.length != 0){
           
-          callback(errors);
-        } else {
+      //     //callback(errors);
+      //     res.render('users/login',{title:"login error" ,errors:errors});
+      //   } else {
           
-          callback(null);
-        }
-      },
+      //     callback(null);
+      //   }
+      // },
       //Find if the use exists
       function(callback){
         
-        User.findOne({"username": req.body.username}, function(err, user){
+        User.findOne({"username": req.body.username}, function(err,user){
           if (err){
             
             callback(err);
           }
           else if (user){
             
-            callback("Username already exists");
+            //callback("Username already exists");
+            res.render('users/login',{title:"login error" ,errors: {error : "Username already exists"}});
           } else{
             //the user has not been found, and signalling that no error has
             //happened3333333333333
@@ -86,8 +87,8 @@ user_controller.register = function(req,res){
           "password_hash": password_hash,          
           // "mutupo" : req.body.mutupo,         
           "username":req.body.username.toLowerCase(),
-          "created_at": Date.now(),
-          "account_confirmed": false
+          "created_at": Date.now()
+          // "account_confirmed": false
         }
 
 
@@ -99,7 +100,7 @@ user_controller.register = function(req,res){
             //generate token for this user
             var payload ={id:user.id};            
             var token = jwt.encode(payload,secret);
-            link = link+ token;
+            link = link;//+ token;
             callback(null, {
               "success": true,
               "message": "Registration successfull"              
@@ -118,10 +119,16 @@ user_controller.register = function(req,res){
           err = [err];
         //message, HTTP code
         response.failure(res, err, 200);
-      }
-      else
+      }else{
         //message, data, HTTP code
-        user_controller.email_user(req.body.email,"Hello "+req.body.username + "<br><br><br> Please Click on the link to verify your email.<br><a href="+link+">"+"Click here to verify</a><br><br><br> Ngatisekei Vakomana nevasikana <br><br><br> Sekanevamwe Team","Confirm Account",req,res); 
+        /*
+         "<br><br><br> Please Click on the link to verify your email.<br><a href="+link+">"+"Click here to verify</a><br><br><br> Ngatisekei Vakomana nevasikana <br><br><br> Sekanevamwe Team","Confirm Account"
+        */
+        
+        user_controller.email_user(req.body.email,"Hello "+req.body.username + "<br><br><br> Tinokuchingamidza kuSekanevamwe, kwatinodandaudza nyambo nendyaringo dzamandorokwati.<br><a href="+link+"> Baya pano utotanga kuzipirwa nemajokosi wakati Kapfupi</a><br><br><br> Ngatisekei Vakomana nevasikana <br><br><br> Sekanevamwe Team","Confirm Account",req,res); 
+        //put a flash telling a person to now use their new credentials
+        
+     }
     });
 };
 
@@ -154,7 +161,7 @@ user_controller.email_user = function(useremail,content, subject,req,res){
             if(!err){
                 Joke.populate(jokes,{path:'author'},function(err,jokes){
                   if(!err){
-                    res.render('jokes/regular',{title: "Regular Jokes", jokes:jokes,user:req.user});
+                    res.render('users/login',{title: "Regular Jokes", jokes:jokes,user:req.user,errors:{}});
                   }else{
                     res.render('error');
                   }
@@ -187,19 +194,13 @@ user_controller.validate_email = function(req,res){
       user.account_confirmed = true;
       user.save(function(err,user){
         if(!err){
-          // console.log("The accounting has been confirmed");
-          // response.success(res, "Your account has been successfully confirmed, batai mbabvu tiseke", null, 200);
-          // var regular_jokes =Joke.jokes("regular");
-          // if(regular_jokes.jokes!=undefined){
-          //     res.render('jokes/regular',{title: "Regular Jokes", jokes:regular_jokes.jokes}); //the defaulut jokes to be returned are the regular jokes because they harm nobody
-          // }else{
-          //     res.render('error');
-          // }
-          Joke.find({level:"regular"}).sort('-created_at').exec(function(err,jokes){
+                  Joke.find({level:"regular"}).sort('-created_at').exec(function(err,jokes){
             if(!err){
                 Joke.populate(jokes,{path:'author'},function(err,jokes){
                   if(!err){
-                    res.render('jokes/regular',{title: "Regular Jokes", jokes:jokes,user:req.user});
+                  //put flash, now login if you want to post
+                    res.render('users/login',{user:req.user, title:"Login"});
+
                   }else{
                     res.render('error');
                   }

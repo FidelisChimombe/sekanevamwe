@@ -17,9 +17,10 @@
 
       <div>
         
-        <div class="inner-joke" ><%= joke.comments.length%><a href="/jokes/show/<%=joke.id%>"><%= " comments"%></a></div>
+        <div class="inner-joke" id="main_<%=joke.id%>" ><%= joke.comments.length%><a href="/jokes/show/<%=joke.id%>"><%= " comments"%></a></div>
         <div class="inner-joke"><span id="likes_<%=joke.id%>"><%= joke.likes.length%><span><%= " likes"%></a></div>
         <div class="inner-joke"><time class="timeago" datetime='<%=joke.created_at.toISOString()%>'><%=joke.created_at.toISOString()%></time></div>
+        <div class="inner-joke"><span><%= "by " %><%= joke.author.username%></span></div>
       </div>      
     </td>
   </tr>
