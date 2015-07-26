@@ -24,7 +24,7 @@ var helpers = require('express-helpers')(app); //automatically includes all view
 
 
 //database setupstat
-mongoose.connect('mongodb://localhost/sekanevamwe:');
+mongoose.connect('mongodb://localhost:27017/sekanevamwe:');
 var db = mongoose.connection; //this creates a db instance
 
 db.on('error',function(){
