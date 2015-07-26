@@ -39,7 +39,17 @@
     "passport-local": "*",
     "session": "*",
     "validator": "*",
-    "timeago": "*"
+    "timeago": "*",
+    "mongodb": "^2.0.39",
+    "regexp-clone": "0.0.1",
+    "sliced": "^1.0.1",
+    "mpath": "^0.2.1",
+    "ms": "^0.7.1",
+    "kareem": "^1.0.1",
+    "hooks-fixed": "^1.1.0",
+    "mpromise": "^0.5.5",
+    "mquery": "^1.6.2",
+    "muri": "^1.1.0"
   },
   "main": "app.js",
   "devDependencies": {},
