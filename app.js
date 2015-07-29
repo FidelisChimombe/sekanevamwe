@@ -17,9 +17,16 @@ var User = require('./models/user');
 var Joke = require('./models/joke');
 var Comment = require('./models/comment');
 var app =express();
-var server = app.listen(8080);
-var client = require('socket.io').listen(server).sockets;
+
 var helpers = require('express-helpers')(app); //automatically includes all view-helpers
+
+
+
+
+
+
+var server = app.listen(8080);
+var client = require('socket.io').listen(server);
 
 
 
