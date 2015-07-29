@@ -25,7 +25,7 @@ var helpers = require('express-helpers')(app); //automatically includes all view
 
 
 
-var server = app.listen(8080);
+var server = app.listen(3000);
 var client = require('socket.io').listen(server);
 
 

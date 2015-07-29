@@ -14,7 +14,7 @@ $(document).ready(function(){
     var id_s = element.value;//contains joke_id and user_id
     var joke_user_id=id_s.split(" ");
     try{
-      var socket = io.connect("http://127.0.0.1:8080");
+      var socket = io.connect("http://127.0.0.1:3000");
     }catch(e){
     }
     if(socket!==undefined){       
@@ -24,7 +24,7 @@ $(document).ready(function(){
 
   update_joke=function(){
     try{
-      var socket = io.connect("http://127.0.0.1:8080");
+      var socket = io.connect("http://127.0.0.1:3000");
     }catch(e){
 
     }
@@ -48,7 +48,7 @@ $(document).ready(function(){
       var username = $("#joke-comment-username").val();
        $("#joke-comment-content").val("");
       try{
-        var socket = io.connect("http://127.0.0.1:8080");
+        var socket = io.connect("http://127.0.0.1:3000");
       }catch(e){
       }
       if(socket!==undefined){
@@ -60,7 +60,7 @@ $(document).ready(function(){
 
   update_comment=function(){
     try{
-      var socket = io.connect("http://127.0.0.1:8080");
+      var socket = io.connect("http://127.0.0.1:3000");
     }catch(e){
 
     }
