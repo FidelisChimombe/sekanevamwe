@@ -44,7 +44,7 @@ if (process.env.OPENSHIFT_MONGODB_DB_PASSWORD) {
 
 
 //database setupstat
-mongoose.connect('mongodb://localhost/sekanevamwe:');
+mongoose.connect('mongodb://localhost/sekanevamwe');
 var db = mongoose.connection; //this creates a db instance
 
 db.on('error',function(){
