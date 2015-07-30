@@ -16,6 +16,7 @@ var timeago = require('timeago');
 var User = require('./models/user');
 var Joke = require('./models/joke');
 var Comment = require('./models/comment');
+var http = require('http');
 var app =express();
 
 var helpers = require('express-helpers')(app); //automatically includes all view-helpers
@@ -25,8 +26,8 @@ var helpers = require('express-helpers')(app); //automatically includes all view
 
 
 
-var server = app.listen(3000);
-var client = require('socket.io').listen(server);
+// var server = app.listen(3000);
+// var client = require('socket.io').listen(server);
 
 
 
@@ -53,75 +54,75 @@ db.on('error',function(){
 
 db.once('open',function(){
     console.log("Successfully connected to Sekanevamwe database ...");
-    client.on('connection',function(socket){
-      socket.on('like',function(data){      
-      var joke_id=data.joke_id;
-      var user_id=data.user_id;     
-      Joke.findOne({_id:joke_id},function(err,joke){  
+    // client.on('connection',function(socket){
+    //   socket.on('like',function(data){      
+    //   var joke_id=data.joke_id;
+    //   var user_id=data.user_id;     
+    //   Joke.findOne({_id:joke_id},function(err,joke){  
 
-          if(joke){
+    //       if(joke){
 
-            if(joke.likes.indexOf(user_id)===-1){ //check for the person liking no the joke id              
-              joke.likes.push(user_id);
-                joke.save(function(err,joke){
-                  if(!err){                         
-                    client.emit('like_update',{joke:joke});//send back like update
-                  }else{
-                    client.emit('error',{error:"joke couldn't be saved"});
-                  }
-                });
-            }else{
-              client.emit('already_liked_the_joke',{joke:joke});
-            }
-          }else{             
-            client.emit('error',{error:"joke couldn't be found"});
-          }
-        });
+    //         if(joke.likes.indexOf(user_id)===-1){ //check for the person liking no the joke id              
+    //           joke.likes.push(user_id);
+    //             joke.save(function(err,joke){
+    //               if(!err){                         
+    //                 client.emit('like_update',{joke:joke});//send back like update
+    //               }else{
+    //                 client.emit('error',{error:"joke couldn't be saved"});
+    //               }
+    //             });
+    //         }else{
+    //           client.emit('already_liked_the_joke',{joke:joke});
+    //         }
+    //       }else{             
+    //         client.emit('error',{error:"joke couldn't be found"});
+    //       }
+    //     });
 
-      }); 
+    //   }); 
 
-    socket.on('comment',function(data){
+    // socket.on('comment',function(data){
       
-        var author_id = data.author_id;
-        var joke_id = data.joke_id;
-        var content = data.content;
-        var created_at = Date.now();
-        var username = data.username;
-        var new_comment = new Comment({
-          author: author_id,
-          content: content,
-          joke_id : joke_id,
-          created_at: created_at,
-          });
+    //     var author_id = data.author_id;
+    //     var joke_id = data.joke_id;
+    //     var content = data.content;
+    //     var created_at = Date.now();
+    //     var username = data.username;
+    //     var new_comment = new Comment({
+    //       author: author_id,
+    //       content: content,
+    //       joke_id : joke_id,
+    //       created_at: created_at,
+    //       });
 
        
-          new_comment.save(function(err,comment){
-            if(err){             
-              client.emit('error',{error:"couldn't save comment"});
-            }else{ 
-              //on success add the comment id in the Joke comments
+    //       new_comment.save(function(err,comment){
+    //         if(err){             
+    //           client.emit('error',{error:"couldn't save comment"});
+    //         }else{ 
+    //           //on success add the comment id in the Joke comments
               
-              Joke.findOne({_id:joke_id},function(err,joke){
-                if(!err){
+              // Joke.findOne({_id:joke_id},function(err,joke){
+              //   if(!err){
                   
-                  joke.comments.push(comment.id);
+              //     joke.comments.push(comment.id);
                   
-                  joke.save(function(err,joke){
-                    if(!err){
-                      client.emit('new_comment',{message:"comment successfully created", comment : comment, joke_comments:joke.comments,joke:joke,username:username});
-                    }else{
-                      client.emit('error',{error:"couldn't save joke"});
-                    }
-                  });
+              //     joke.save(function(err,joke){
+              //       if(!err){
+              //         client.emit('new_comment',{message:"comment successfully created", comment : comment, joke_comments:joke.comments,joke:joke,username:username});
+              //       }else{
+              //         client.emit('error',{error:"couldn't save joke"});
+              //       }
+              //     });
                   
-                }else{
-                  client.emit('error',{error:"couldn't find joke"});
-                }
-              });             
-            }
-          });
-        });
-      });
+              //   }else{
+              //     client.emit('error',{error:"couldn't find joke"});
+              //   }
+              // });             
+    //         }
+    //       });
+    //     });
+    //   });
     });
 
 // view engine setup

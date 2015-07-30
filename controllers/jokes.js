@@ -199,7 +199,7 @@ joke_controller.all_comments=function(req,res){
 */
 
 
-
+//make sure a person is logged in before they like
 joke_controller.like=function(req,res){
   var joke_id= req.params.joke_id;
   
@@ -211,17 +211,12 @@ joke_controller.like=function(req,res){
         joke.likes.push(req.user.id);
         joke.save(function(err,joke){
           if(!err){
-            
-            console.log("Zvabhadhara");
-
-
             res.json({message:"successfully liked the joke",joke:joke,user:req.user});
           }else{
             res.render('error',{error:"Can't retrieve jokes",title:"error"});
           }
         });
-      }else{
-        console.log("Zvabhadhara Pasina");
+      }else{       
         res.render('error',{error:"Can't retrieve jokes",title:"error"});
       }
     }else{

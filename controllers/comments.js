@@ -13,6 +13,7 @@ comment_controller.new_comment=function(req,res){
   var author_id = req.user.id;
   var joke_id = req.body.joke_id;
   var content = req.body.content;
+  var username=req.body.username;
   var created_at = Date.now();
   
 
@@ -29,10 +30,18 @@ comment_controller.new_comment=function(req,res){
         res.json({error: "An error occured, while trying to make your comment"});
       }else{ 
         //on success add the comment id in the Joke comments
-        Joke.findOne(joke_id,function(err,joke){
+        Joke.findOne({_id:joke_id},function(err,joke){
           if(!err){
             joke.comments.push(comment.id);
-            res.json({message:"comment successfully created", comment : comment, joke_comments:joke.comments,user:req.user});
+            joke.save(function(err,joke){
+              if(!err){
+                
+                res.json({message:"comment successfully created", comment : comment, username:username,joke_comments:joke.comments,user:req.user});
+              }else{
+                res.json({message:"Can't comment, because joke couldn't save"});
+              }
+          });
+           
           }else{
             res.json({message:"Can't post the comment because you are not logged in"});
           }
@@ -40,6 +49,24 @@ comment_controller.new_comment=function(req,res){
        
       }
     });
+
+       // Joke.findOne({_id:joke_id},function(err,joke){
+       //          if(!err){
+                  
+       //            joke.comments.push(comment.id);
+                  
+       //            joke.save(function(err,joke){
+       //              if(!err){
+       //                client.emit('new_comment',{message:"comment successfully created", comment : comment, joke_comments:joke.comments,joke:joke,username:username});
+       //              }else{
+       //                client.emit('error',{error:"couldn't save joke"});
+       //              }
+       //            });
+                  
+       //          }else{
+       //            client.emit('error',{error:"couldn't find joke"});
+       //          }
+       //        }); 
   }else{
     res.json({message:"Can't post the comment because you are not logged in"});
   }

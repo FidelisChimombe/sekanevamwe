@@ -28,14 +28,15 @@
     <td><div><pre><%= joke.content %></pre></div></td>
   </tr>
 
-  <% if(user){%>
+  <% if(user){%>  
     <tr>  
       <td><input id="joke-comment-content" class="input-fields" type="text"  required/></td>
       <td><input id="joke-comment-id" type="hidden" name="joke_id" value='<%=joke.id%>'/></td>
       <td><input id="joke-author-id" type="hidden" name="author_id" value='<%=user.id%>'/></td>
       <td><input id="joke-comment-username" type="hidden" name="username" value='<%=user.username%>'/></td>
       <td><button class="comment-button" onclick="comment()" id="comment-button">comment</button></td>        
-    </tr>   
+    </tr>  
+  
   <%}%>
 </table>
 <table id="table-comments">
