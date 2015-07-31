@@ -34,13 +34,13 @@ var helpers = require('express-helpers')(app); //automatically includes all view
 
 var connection_string = 'mongodb://localhost:27017/sekanevamwe';
 
-// if (process.env.OPENSHIFT_MONGODB_DB_PASSWORD) {
-//         connection_string = 'mongodb://' + 
-//         process.env.OPENSHIFT_MONGODB_DB_USERNAME + ':fidelis' +
-//         process.env.OPENSHIFT_MONGODB_DB_PASSWORD + '@' +
-//         process.env.OPENSHIFT_MONGODB_DB_HOST + ':' +
-//         process.env.OPENSHIFT_MONGODB_DB_PORT + '/sekanevamwe';
-// }
+if (process.env.OPENSHIFT_MONGODB_DB_PASSWORD) {
+        connection_string = 'mongodb://' + 
+        process.env.OPENSHIFT_MONGODB_DB_USERNAME + ':fidelis' +
+        process.env.OPENSHIFT_MONGODB_DB_PASSWORD + '@' +
+        process.env.OPENSHIFT_MONGODB_DB_HOST + ':' +
+        process.env.OPENSHIFT_MONGODB_DB_PORT + '/sekanevamwe';
+}
 
 
 //database setupstat
