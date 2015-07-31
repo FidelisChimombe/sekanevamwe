@@ -16,13 +16,16 @@ comment_controller.new_comment=function(req,res){
   var username=req.body.username;
   var created_at = Date.now();
   
-
-  var new_comment = new Joke({
+console.log(req.body);
+console.log(req.body.joke_id);
+  var new_comment = new Comment({
     author: author_id,
-    content: content,
-    joke_id : joke_id,
+    content: content,    
     created_at: created_at,
+    joke_id:joke_id
     });
+
+
 
   if(JSON.stringify(req.user.id) === JSON.stringify(author_id)){
     new_comment.save(function(err,comment){
@@ -35,7 +38,9 @@ comment_controller.new_comment=function(req,res){
             joke.comments.push(comment.id);
             joke.save(function(err,joke){
               if(!err){
-                
+                console.log("here is the comment");
+                console.log(comment.joke_id);
+                console.log(comment);
                 res.json({message:"comment successfully created", comment : comment, username:username,joke_comments:joke.comments,user:req.user});
               }else{
                 res.json({message:"Can't comment, because joke couldn't save"});

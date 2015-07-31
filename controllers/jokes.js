@@ -67,6 +67,7 @@ joke_controller.delete_joke = function(req,res){
 
 joke_controller.show_joke = function(req,res){
   var joke_id = req.params.joke_id;
+  console.log(joke_id);
   Joke.findOne({_id:joke_id},function(err,joke){  
     if(joke){
       User.findOne({_id:joke.author},function(err,user){        
@@ -75,6 +76,7 @@ joke_controller.show_joke = function(req,res){
             if(!err){
               Comment.populate(comments,{path:'author'},function(err,comments){
                 if(!err){
+                  
                   res.render('jokes/show',{message:"Joke editing was successful",joke:joke,comments:comments,joke_author:user,title:"Joke",user:req.user,author:user.username});
                 }else{
                   res.render('error',{error: "Can't show the jokes comments",title:"error"});
