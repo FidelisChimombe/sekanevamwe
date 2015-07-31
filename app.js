@@ -32,7 +32,7 @@ var helpers = require('express-helpers')(app); //automatically includes all view
 
 
 
-var connection_string = 'mongodb://admin:password@localhost:28017/Sekanevamwe';
+var connection_string = 'mongodb://admin:password@localhost:28017/sekanevamwe';
 
 // if (process.env.OPENSHIFT_MONGODB_DB_PASSWORD) {
 //         connection_string = 'mongodb://' + 
@@ -136,4 +136,4 @@ var ip = process.env.OPENSHIFT_NODEJS_IP;
 
 
 app.listen(port || 3000, ip);
-//module.exports = app;
+module.exports = app;
