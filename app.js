@@ -32,25 +32,24 @@ var helpers = require('express-helpers')(app); //automatically includes all view
 
 
 
-// var connection_string = 'mongodb://localhost/sekanevamwedb';
+var connection_string = 'mongodb://localhost/sekanevamwe';
 
-// if (process.env.OPENSHIFT_MONGODB_DB_PASSWORD) {
-//         connection_string = 'mongodb://' + 
-//         process.env.OPENSHIFT_MONGODB_DB_USERNAME + ':' +
-//         process.env.OPENSHIFT_MONGODB_DB_PASSWORD + '@' +
-//         process.env.OPENSHIFT_MONGODB_DB_HOST + ':' +
-//         process.env.OPENSHIFT_MONGODB_DB_PORT + '/sekanevamwe';
-// }
+if (process.env.OPENSHIFT_MONGODB_DB_PASSWORD) {
+        connection_string = 'mongodb://' + 
+        process.env.OPENSHIFT_MONGODB_DB_USERNAME + ':' +
+        process.env.OPENSHIFT_MONGODB_DB_PASSWORD + '@' +
+        process.env.OPENSHIFT_MONGODB_DB_HOST + ':' +
+        process.env.OPENSHIFT_MONGODB_DB_PORT + '/sekanevamwe';
+}
 
 
 //database setupstat
-mongoose.connect('mongodb://localhost/sekanevamwedb');
+mongoose.connect(connection_string);
 var db = mongoose.connection; //this creates a db instance
-console.log("trying to connect to the db");
-console.log(db);
 
-db.on('error',function(){
-    console.log("Failed to connect to Sekanevamwe database ...");
+
+db.on('error',function(msg){
+    console.log("Failed to connect to Sekanevamwe database ...",msg);
 });
 
 
