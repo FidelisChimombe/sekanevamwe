@@ -56,9 +56,9 @@ textarea{
 }
 
 #joke-regulator{
-  margin-right: auto;
+  margin-right: 10px;
   margin-left:100px;  
-  width: 45%;
+  width: 80%;
   margin-top: 2px;   
   font-size: 15px;
   
