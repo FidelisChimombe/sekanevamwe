@@ -25,7 +25,7 @@ $(document).ready(function(){
     var joke_id=joke_user_id[0];
     var user_id=joke_user_id[1];
     $.ajax({
-            url: "https://localhost:3000/jokes/like/"+joke_id,
+            url: "https://sekanevamwe.herokuapp.com/jokes/like/"+joke_id,
             type: "POST",
             data:{ 
               
@@ -78,7 +78,7 @@ $(document).ready(function(){
       //   socket.emit('comment',{content:content,joke_id:joke_id,author_id:author_id,username:username});
       // }
       $.ajax({
-            url: "https://localhost:3000/comments/new_comment/",
+            url: "https://sekanevamwe.herokuapp.com/comments/new_comment/",
             type: "POST",
             data:{ 
               "content" : content,
