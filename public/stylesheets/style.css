@@ -38,6 +38,10 @@ body{
   height:90px;
 }
 
+.show-content{
+  white-space: pre;
+}
+
 textarea{
   min-width:490px;
   max-width:490px;
@@ -108,7 +112,7 @@ textarea{
 
 pre{
   width:500px;
-  display:inline;
+ 
 }
 
 
