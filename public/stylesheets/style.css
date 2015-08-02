@@ -58,7 +58,7 @@ textarea{
 #joke-regulator{
   margin-right: auto;
   margin-left:100px;  
-  width: 50%;
+  width: 45%;
   margin-top: 2px;   
   font-size: 15px;
   
@@ -113,7 +113,7 @@ pre{
 
 
 .nav{
-  margin-right: 50px;
+  margin-right: 20px;
   margin-top: 10px;
   font-size: 15px;
 }
