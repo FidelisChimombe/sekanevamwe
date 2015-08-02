@@ -1,12 +1,11 @@
 <% layout('layouts/main-layout') -%>
 <div class="display">
-<table>
+<table class="table table-hover">
 <% jokes.forEach(function(joke){%>
   <tr class="joke-row">
   <% if(user){%>
     <td>
       <div> <button type="button" class="like" onclick='like(this)' value="<%=joke.id%> <%=user.id%>"></button></div>
-      <div> <button type="button" class="dislike" value="<%=joke.id%>"></button></div>
     </td>
   <%}%>
     <td>

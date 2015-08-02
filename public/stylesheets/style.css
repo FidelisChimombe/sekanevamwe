@@ -1,5 +1,16 @@
+body{
+  background:#b0c4de;
+}
+
 .first-column-input{
   width:90px;
+}
+
+
+
+#bottom-div{
+  background: #b0c4de;
+
 }
 
 
@@ -46,8 +57,8 @@ textarea{
 
 #joke-regulator{
   margin-right: auto;
-  margin-left:auto;  
-  width: 60%;
+  margin-left:100px;  
+  width: 50%;
   margin-top: 2px;   
   font-size: 15px;
   
@@ -59,7 +70,7 @@ textarea{
   margin: 5px;
   margin-left: 5%;
   border-radius: 2px;
-  background-color:  #66FF66;
+ /* background-color:  #66FF66;*/
   font-size: 20px;
   width:100px;
   text-align: center;
@@ -97,12 +108,14 @@ textarea{
 
 pre{
   width:500px;
+  display:inline;
 }
 
 
 .nav{
   margin-right: 50px;
   margin-top: 10px;
+  font-size: 20px;
 }
 
 
@@ -114,6 +127,7 @@ pre{
   height: 50px;
   border-radius: 20px;
   margin: 5px;
+
 }
 #left-logo{
 }
@@ -171,14 +185,14 @@ research display: block and display : inline;
 */
 
 .joke-title{
-  font-size: 15px;
+  font-size: 30px;
 }
 button{
   outline: 0px;
 
 }
 .joke-row{
-  height:100px;
+  height:75px;
 }
 
 .joke-title-row{

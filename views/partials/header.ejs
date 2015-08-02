@@ -1,12 +1,12 @@
   
-    <div id="main-first-header" class="inlineb">
+    <div id="main-first-header" class="inlineb navbar navbar-default navbar-fixed-top">
         <div class="logo-header inlineb" id="left-logo">
           <a href="/">
             <img src="/images/sekanevamwe.jpg" id="logo">
           </a>
         </div>     
 
-        <div  class="logo-header inlineb" id="right-logo">
+        <div  class="logo-header inlineb " id="right-logo">
             <ul id="nav">
               <li  class="nav inlineb"><b><a href="/jokes/regular">Sekanevamwe</a></b></li>              
               <% if(user){%>
@@ -14,7 +14,7 @@
                 <li class="nav inlineb">
                   <b>
                     <form action = "/users/logout" method = "get">
-                      <input class="login-logout" type="submit" value="logout" />
+                      <a><input class="login-logout" type="submit" value="logout" /></a>
                     </form>
                   </b>
                 </li>
@@ -22,7 +22,7 @@
                 <li class="nav inlineb">
                   <b>
                     <form action = "/users/login" method = "get">
-                      <input class="login-logout" type="submit" value="login" />
+                     <a> <input class="login-logout" type="submit" value="login" /></a>
                     </form>
                   </b>
                 </li>
@@ -30,7 +30,7 @@
             </ul>
         </div>
     </div>
-    <div id="joke-regulator" class="">
+    <div id="joke-regulator" class="navbar-fixed-top">
           <ul class="horizontal-navigation">
             <li class="navigator" title="Regular Jokes" style="border-top-left-radius: 6px"><a href="/jokes/regular">Regular</a></li>
             <li class="navigator" title="18+ Jokes"><a href="/jokes/eighteen">18+</a></li>

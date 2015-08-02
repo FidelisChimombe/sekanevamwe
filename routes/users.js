@@ -32,8 +32,7 @@ passport.deserializeUser(function(id, done) {
 
 
 //registers a new user into the system
-router.post('/register',function(req,res){
-  console.log("The request has just been received");
+router.post('/register',function(req,res){  
   user_controller.register(req,res);
 });
 

@@ -182,8 +182,8 @@ $(document).ready(function(){
 
 
 
-update_joke();
-update_comment();
+//update_joke();
+//update_comment();
   
 
 
