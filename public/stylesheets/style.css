@@ -184,6 +184,10 @@ pre{
 
 }
 
+.content-text{
+  white-space: pre-wrap;
+}
+
 /*
 research display: block and display : inline;
 */
